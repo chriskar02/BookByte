@@ -1,3 +1,4 @@
+-- DDL
 -- general notes:
 --	boolean automatically translates to tinyint
 --	must first create table that contains referenced value and then the table with the foreign key (example sch id in school and user)
@@ -6,7 +7,7 @@
 --	free text (book summary, keywords and reviews) must be maximum 65KB too.
 --	we allow some attributes (eg in book) to be nullable
 --	dropping tables must be in correct order: bottom up
-
+ 
 create table if not exists school (
 	id int primary key,
 	name varchar(60) not null,
@@ -31,6 +32,7 @@ create table if not exists user (
 create table if not exists teacher (
 	username varchar(20) primary key,
 	handler_id int default null unique,
+	birth date not null,
 	verified boolean default False,
 	constraint fk_teacher_user foreign key (username)
 	 references user(username) on delete cascade on update cascade
