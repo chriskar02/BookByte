@@ -31,6 +31,7 @@
 	- print borrower card
 	- delete or deactivate student and teacher accounts
 	- publish (accept) user rating
+	- cancel reservation
 
 Ο κεντρικός διαχειριστής σε επίπεδο δικτύου σχ. βιβλ., ή αλλιώς "network admin" ή απλά "admin", ορίζεται από τον διαχειριστή του συστήματος. Έχει όλα τα δικαιώματα πρόσβασης, επεξεργασίας και διαγραφής. Μπορούν να είναι περισσότεροι από ένας. Ένας admin είναι και χρήστης ο οποίος ορίζει μόνος του την ιδιότητά του (μαθητής, εκπαιδευτικός, χειριστής). Υποχρεώσεις admin:
 	- accept handler

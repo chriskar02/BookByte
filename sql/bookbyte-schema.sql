@@ -69,6 +69,31 @@ create table if not exists category (
 	 references book(isbn) on delete cascade on update cascade
 ) engine=InnoDB default charset=utf8;
 
+create table if not exists school_storage (
+	sch_id int not null,
+	isbn char(10) not null,
+	copies int not null,
+	primary key (isbn, sch_id),
+	constraint fk_storage_sch_id foreign key (sch_id)
+	 references school(id) on delete cascade on update cascade,
+	constraint fk_storage_book foreign key (isbn)
+	 references book(isbn) on delete cascade on update cascade
+) engine=InnoDB default charset=utf8;
+
+create table if not exists ratings (
+	username varchar(20) not null,
+	isbn char(10) not null,
+	date timestamp not null default current_timestamp on update current_timestamp,
+	stars smallint not null,
+	description text,
+	verified boolean,
+	primary key (username, isbn),
+	constraint fk_storage_sch_id foreign key (sch_id)
+	 references school(id) on delete cascade on update cascade,
+	constraint fk_storage_book foreign key (isbn)
+	 references book(isbn) on delete cascade on update cascade
+) engine=InnoDB default charset=utf8;
+
 
 
 
