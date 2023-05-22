@@ -7,7 +7,11 @@
 --	free text (book summary, keywords and reviews) must be maximum 65KB too.
 --	we allow some attributes (eg in book) to be nullable
 --	dropping tables must be in correct order: bottom up
- 
+
+DROP SCHEMA IF EXISTS BookByte;
+CREATE SCHEMA BookByte;
+USE BookByte;
+
 create table if not exists school (
 	id int primary key,
 	name varchar(60) not null,
