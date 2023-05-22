@@ -87,8 +87,9 @@ in_out: borrowed or returned
 
 Όταν διαγράφεται ένα σχολείο, όλοι οι χρήστες του διαγράφονται επίσης.
 
+Όταν διαγράφεται ένας χρήστης διαγράφονται και οι κριτικές του.
 
-
+handler_username in loans is not a FK in case handler deletes account.
 
 
 

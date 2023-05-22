@@ -88,11 +88,42 @@ create table if not exists ratings (
 	description text,
 	verified boolean,
 	primary key (username, isbn),
-	constraint fk_storage_sch_id foreign key (sch_id)
-	 references school(id) on delete cascade on update cascade,
-	constraint fk_storage_book foreign key (isbn)
+	constraint fk_ratings_username foreign key (username)
+	 references user(username) on delete cascade on update cascade,
+	constraint fk_ratings_book foreign key (isbn)
 	 references book(isbn) on delete cascade on update cascade
 ) engine=InnoDB default charset=utf8;
+
+create table if not exists loan (
+	username varchar(20) not null,
+	isbn char(10) not null,
+	handler_username varchar(20) not null,
+	date timestamp not null default current_timestamp on update current_timestamp,
+	sch_id int not null,
+	in_out enum('borrowed','returned') not null,
+	primary key (username, isbn, date, in_out),
+	constraint fk_loans_username foreign key (username)
+	 references user(username) on delete cascade on update cascade,
+	constraint fk_loans_book foreign key (isbn)
+	 references book(isbn) on delete cascade on update cascade,
+	constraint fk_loans_sch_id foreign key (sch_id)
+	 references school(id) on delete cascade on update cascade
+) engine=InnoDB default charset=utf8;
+
+create table if not exists reservation (
+	username varchar(20) not null,
+	isbn char(10) not null,
+	date timestamp not null default current_timestamp on update current_timestamp,
+	sch_id int not null,
+	primary key (username, isbn),
+	constraint fk_rsv_username foreign key (username)
+	 references user(username) on delete cascade on update cascade,
+	constraint fk_rsv_book foreign key (isbn)
+	 references book(isbn) on delete cascade on update cascade,
+	constraint fk_rsv_sch_id foreign key (sch_id)
+	 references school(id) on delete cascade on update cascade
+) engine=InnoDB default charset=utf8;
+
 
 
 
