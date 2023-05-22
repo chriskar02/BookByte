@@ -23,6 +23,7 @@ create table if not exists user (
 	password varchar(40) not null,
 	email varchar(60) not null unique,
 	first_name varchar(45) not null,
+	last_name varchar(45) not null,
 	sch_id int not null,
 	verified boolean default False,
 	constraint fk_user_sch_id foreign key (sch_id)
