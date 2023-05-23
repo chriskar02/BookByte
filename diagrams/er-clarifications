@@ -91,6 +91,9 @@ in_out: borrowed or returned
 
 handler_username in loans is not a FK in case handler deletes account.
 
+update: αντικαταστήθηκε το handler_id με το boolean handler_request. Όταν ένας εκπαιδευτικός θέλει να γίνει handler, κάνει το handle_request True και όταν ο admin το αποδεχθεί γίνεται verified=True. Το αν κάποιος είναι handler φαίνεται από το verified.
+
+
 
 
 

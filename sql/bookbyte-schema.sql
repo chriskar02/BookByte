@@ -36,7 +36,7 @@ create table if not exists user (
 
 create table if not exists teacher (
 	username varchar(20) primary key,
-	handler_id int default null unique,
+	handler_request boolean default False,
 	birth date not null,
 	verified boolean default False,
 	constraint fk_teacher_user foreign key (username)
