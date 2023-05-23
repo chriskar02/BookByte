@@ -5,7 +5,7 @@
 
 Όταν ο χρήστης ψάχνει για βιβλία, αυτά θα προσφέρονται στην σελίδα αναζήτησης με 4 τρόπους: α) ταξινομημένα ως προς την δημοφιλία (αριθμός κρατήσεων) β) ταξινομημένα με average rating γ) με βάση την κατηγορία δ) με ΑΝΑΖΗΤΗΣΗ τίτλου, isbn, συγγραφέα ή εκδοτικού οίκου. Λόγω του ερωτήματος 3.1.2 οι συγγραφείς και οι κατηγορίες αποθηκεύονται σε διαφορετικό πίνακα.
 
-Όλοι οι χρήστες έχουν username, password και προσωπικά στοιχεία (PII). Ως προσωπικά στοιχεία επιλέγονται: email για επικοινωνία, ονοματεπώνυμο (ξεχωριστά το όνομα από το επώνυμο) και επιλογή σχολείου (με dropdown ή autocomplete αναζήτηση) για την έγκριση από τον χειριστή, ηλικία (εκπαιδευτικών) για το ερώτημα 3.1.3
+Όλοι οι χρήστες έχουν username, password και προσωπικά στοιχεία (PII). Ως προσωπικά στοιχεία επιλέγονται: email για επικοινωνία, ονοματεπώνυμο (ξεχωριστά το όνομα από το επώνυμο; -> γιατι;) και επιλογή σχολείου (με dropdown ή autocomplete αναζήτηση) για την έγκριση από τον χειριστή, ηλικία (εκπαιδευτικών) για το ερώτημα 3.1.3
 	Δικαιώματα χρήστη:
 	- αναζήτηση βιβλίων
 	- δανεισμός (max 2 for student max 1 for teacher per week - 7 days)
@@ -94,8 +94,9 @@ handler_username in loans is not a FK in case handler deletes account.
 update: αντικαταστήθηκε το handler_id με το boolean handler_request. Όταν ένας εκπαιδευτικός θέλει να γίνει handler, κάνει το handle_request True και όταν ο admin το αποδεχθεί γίνεται verified=True. Το αν κάποιος είναι handler φαίνεται από το verified.
 
 
-
-
+reminders:
+	1. update diagrams (have been changes to schema)
+	2. add checks to create tables (eg: borrowing date < return date, cannot reserve if borrowed or already reserved (unique), cannot reserve of borrow if there is no availiability in school storage)
 
 
 

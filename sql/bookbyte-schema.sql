@@ -13,23 +13,22 @@ CREATE SCHEMA BookByte;
 USE BookByte;
 
 create table if not exists school (
-	id int primary key,
-	name varchar(60) not null,
-	email varchar(60) not null,
-	address varchar(60) not null,
+	id int primary key auto_increment,
+	name varchar(60) not null unique,
+	email varchar(60) not null unique,
+	address varchar(60) not null unique,
 	city varchar(30) not null,
 	principal_name varchar(50) not null,
-	phone int not null
+	phone int not null unique
 ) engine=InnoDB default charset=utf8;
 
 create table if not exists user (
 	username varchar(20) primary key,
 	password varchar(40) not null,
 	email varchar(60) not null unique,
-	first_name varchar(45) not null,
-	last_name varchar(45) not null,
+	name varchar(50) not null,
 	sch_id int not null,
-	verified boolean default False,
+	user_verified boolean default False,
 	constraint fk_user_sch_id foreign key (sch_id)
 	 references school(id) on delete cascade on update cascade
 ) engine=InnoDB default charset=utf8;
@@ -38,7 +37,7 @@ create table if not exists teacher (
 	username varchar(20) primary key,
 	handler_request boolean default False,
 	birth date not null,
-	verified boolean default False,
+	handler_verified boolean default False,
 	constraint fk_teacher_user foreign key (username)
 	 references user(username) on delete cascade on update cascade
 ) engine=InnoDB default charset=utf8;
@@ -93,7 +92,7 @@ create table if not exists ratings (
 	date timestamp not null default current_timestamp on update current_timestamp,
 	stars smallint not null,
 	description text,
-	verified boolean,
+	rating_verified boolean,
 	primary key (username, isbn),
 	constraint fk_ratings_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
