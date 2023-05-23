@@ -1,4 +1,4 @@
--- DML script
+-- temporary script, here we write queries, views and sql functions for the app. Then we will mve them to schema.sql (views, functions) and to php scripts.
 
 -- find teacher loans
 create view teacher_loans as
