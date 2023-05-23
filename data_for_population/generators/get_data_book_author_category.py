@@ -64,6 +64,11 @@ def fetch_book_info(category):
 			
 			categories = volume_info.get('categories', '')
 			authors = volume_info.get('authors', '')
+			
+			if pages == 0 or summary == '' or keywords == '' or title == '' or language == '' or publisher == '' or isbn == '' or authors == '' or categories == '':
+				print('emoty val: continuing')
+				continue
+			
 			# Download cover image and convert to blob
 			cover_image_blob = download_image(cover_image_url)
 			# Save the book information in the CSV file
@@ -74,6 +79,7 @@ def fetch_book_info(category):
 				for category in category2.split(' & '):
 					save_category_info([isbn,category])
 
+# number of results is range*10
 for i in range(20):
 	if i % 5 == 0: print('got',i)
 	category = random.choice(categories)
