@@ -26,12 +26,10 @@ def csv_to_sql(input_csv, table_name, attributes_ordered):
 				print(sql_line)
 				file2.write(sql_line+'\n')		
 
-# driver
-path = 'generated_csv/';
-
-csv_to_sql(path+'book_data.csv', 'book', 'title,publisher,isbn,pages,summary,cover_image,language,keywords')
-csv_to_sql(path+'author_data.csv', 'author', 'isbn,name')
-csv_to_sql(path+'category_data.csv', 'category', 'isbn,category')
+# main
+csv_to_sql('generated_csv/book.csv', 'book', 'title,publisher,isbn,pages,summary,cover_image,language,keywords')
+csv_to_sql('generated_csv/author.csv', 'author', 'isbn,name')
+csv_to_sql('generated_csv/category.csv', 'category', 'isbn,category')
 
 
 

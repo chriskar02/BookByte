@@ -1,0 +1,1 @@
+The scripts are used to generate data in csv format. Book, author and category are real world data, and the rest "all_other" data are fake using the Faker module in python. You don't need to execute these scripts, the outputs are already exported in "generated_csv" directory.
