@@ -49,8 +49,8 @@ create table if not exists admin (
 ) engine=InnoDB default charset=utf8;
 
 create table if not exists book (
-	title varchar(40) not null,
-	publisher varchar(20) not null,
+	title varchar(80) not null,
+	publisher varchar(40) not null,
 	isbn char(10) primary key,
 	pages smallint,
 	summary text not null,
@@ -69,7 +69,7 @@ create table if not exists author (
 
 create table if not exists category (
 	isbn char(10) not null,
-	category varchar(15) not null,
+	category varchar(30) not null,
 	primary key (isbn, category),
 	constraint fk_category_book foreign key (isbn)
 	 references book(isbn) on delete cascade on update cascade

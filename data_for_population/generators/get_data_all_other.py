@@ -5,6 +5,7 @@
 # important: first you need to create category_data.csv (for isbns)
 #  we choose category_data instead of book_data because it has smaller size which is faster. This is no problem bc it contains all isbns.
 # sch_id is randint(1,number_of_schools), afou to id sto school einai auto_increment
+# mariadb converts boolean to tinyint so instad of true, flase we use 1,0
 
 from faker import Faker
 import csv
@@ -97,9 +98,9 @@ for i in range(number_of_users):
 	row.append(fake.name())
 	row.append(str(sch_id))
 	
-	ver = "False"
+	ver = "0"
 	if random.randint(1,100) < 50: #prob of being verified
-		ver = "True"
+		ver = "1"
 	
 	row.append(ver)
 	if debug: print(row,"\n\n")
@@ -122,12 +123,12 @@ for i in usernames:
 		row.append(i)
 		teacher_usernames.append(i)
 		
-		req = "False"
-		ver = "False"
+		req = "0"
+		ver = "0"
 		if random.randint(1,100) < 45: #prob of requesting
-			req = "True"
+			req = "1"
 			if random.randint(1,100) < 75: #prob of being a handler
-				ver = "True"
+				ver = "1"
 				handler_usernames.append(i)
 				counter2+=1
 		row.append(req) #handler_req
@@ -210,10 +211,10 @@ for i in usernames:
 			row.append(str(random.randint(1,5))) #stars
 			row.append(fake.paragraph()) #description
 
-			ver = "True"
+			ver = "1"
 			rnd = random.randint(1,10)
 			if rnd <= 5:
-				ver = "False"
+				ver = "0"
 			row.append(ver) #verified
 
 			if debug: print(row,"\n\n")
@@ -251,7 +252,7 @@ for i in range(len(usernames)):
 			row.append(usernames[i])
 			row.append(j)
 			row.append(rand_handler)
-			row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,24)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2))
+			row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,23)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2))
 			row.append(user_schools[rand_handler])
 			row.append('borrowed') #in_out
 
@@ -265,7 +266,7 @@ for i in range(len(usernames)):
 				row.append(usernames[i])
 				row.append(j)
 				row.append(rand_handler)
-				row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,24)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2)) #greater than borrowing date
+				row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,23)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2)) #greater than borrowing date
 				row.append(user_schools[rand_handler])
 				row.append('returned') #in_out
 	
@@ -306,7 +307,7 @@ for i in usernames:
 			row = []
 			row.append(i)
 			row.append(j)
-			row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,24)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2))
+			row.append(str(random.randint(2023,2023)) + "-" + str(random.randint(1,12)).zfill(2) + "-" + str(random.randint(1,27)).zfill(2) + " " + str(random.randint(1,23)).zfill(2) + ":" + str(random.randint(1,59)).zfill(2)+ ":" + str(random.randint(1,59)).zfill(2))
 			row.append(random.randint(1, number_of_schools)) #vazoume random school kai h mariadb tha kopsei osa sxoleia den exoun diathesimothta
 
 			if debug: print(row,"\n\n")
