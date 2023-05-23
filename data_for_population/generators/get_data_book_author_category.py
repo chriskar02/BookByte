@@ -5,8 +5,6 @@ import random
 import string
 import tempfile
 
-# List of book categories or topics
-#categories = ["fiction", "history", "science", "art", "technology"]
 categories = [
     "fiction", "history", "science", "art", "technology",
     "biography", "business", "travel", "self-help",
@@ -18,15 +16,15 @@ isbns = []
 
 # Function to save book information in CSV file
 def save_book_info(book_info):
-	with open("book_data.csv", "a", newline="", encoding="utf-8") as file:
+	with open("book.csv", "a", newline="", encoding="utf-8") as file:
 		writer = csv.writer(file)
 		writer.writerow(book_info)
 def save_author_info(book_info):
-	with open("author_data.csv", "a", newline="", encoding="utf-8") as file:
+	with open("author.csv", "a", newline="", encoding="utf-8") as file:
 		writer = csv.writer(file)
 		writer.writerow(book_info)
 def save_category_info(book_info):
-	with open("category_data.csv", "a", newline="", encoding="utf-8") as file:
+	with open("category.csv", "a", newline="", encoding="utf-8") as file:
 		writer = csv.writer(file)
 		writer.writerow(book_info)
 
