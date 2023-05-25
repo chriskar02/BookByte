@@ -1,0 +1,45 @@
+.btn-nav {
+  position: relative;
+  border: 3px ridge #ff4655;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 0.5s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px
+}
+
+.btn-nav::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 30%;
+  background-color: #0d0701;
+  transition: 0.4s;
+  transform-origin: center;
+}
+
+.btn-nav::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 30%;
+  background-color: #0d0701;
+  transition: 0.4s;
+}
+
+.btn-nav:hover::before, .btn-nav:hover::after {
+  transform: scale(0)
+}
+
+.btn-nav:hover {
+  box-shadow: inset 0px 0px 25px #ff4655;
+}

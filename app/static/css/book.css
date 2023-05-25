@@ -1,0 +1,100 @@
+main{
+  width: 100%;
+}
+.card{
+  text-align: center;
+  background-color: #2f3b45;
+  padding: 20px;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+  height: 400px;
+}
+.left, .right{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 400px;
+  display: inline-block;
+}
+.card > .left{
+  width: 300px;
+}
+.card > .right{
+  left: 310px;
+  text-align: left;
+  padding: 10px;
+  width: calc(100% - 330px);
+  overflow-y: auto;
+}
+.card > .left > img{
+  width: 100%;
+  object-fit: contain;
+  padding: 15px;
+}
+.card > .right > .title{
+  font-size: 1.2em;
+  font-weight: 800;
+}
+.card > .right > .authors{
+}
+.card > .right > .category{
+  color: #787878;
+}
+.card > .right > .tinydetails{
+  font-size: 0.7em;
+}
+
+.extras {
+  height: auto;
+}
+.card > .extend{
+  width: 100%;
+}
+.card > .storage{
+  display: none;
+}
+.card > .control{
+  width: 100%;
+  text-align: center;
+}
+.card > .control > button{
+  width: 45%;
+}
+
+#selected-left{
+  color: #ff4655;
+}
+
+.user-rating{
+  width: 100%;
+  text-align: left;
+  padding: 5px 15px;
+  background-color: #0f1923;
+  border-radius: 7px;
+  margin-bottom: 5px;
+}
+.row1{
+  width: 100%;
+}
+.row1 > .username{
+  font-weight: bold;
+  font-size: 0.9em;
+  font-style: italic;
+}
+.row1 > .date{
+  color: #898989;
+  font-size: 0.7em;
+  font-style: italic;
+  margin: 0px 10px;
+}
+.row2{
+  padding: 10px;
+  width: 100%;
+  max-height: 100px;
+  overflow-y: auto;
+  font-size: 1em;
+}
