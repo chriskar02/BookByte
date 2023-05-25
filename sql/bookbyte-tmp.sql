@@ -30,7 +30,7 @@ create view youngster_loans as
 	from teacher_loans
 	where datediff(now(),birth) < 14600
 	group by username
-	order by n_loans;
+	order by n_loans desc;
 
 
 --3.1.4
@@ -42,5 +42,46 @@ create view no_loan as
 	group by author;
 
 --3.1.5
+create view same_loans as
+	select handler_username as handler, count(*) as loaned
+	from loan
+	where in_out = 'borrowed' and datediff(now(), date) < 365
+	group by handler_username
+	having loaned > 20
+	order by loaned desc;
 
+--3.1.6
+create view frequently_paired as
+	select category1, category2, count(distinct isbn) as count
+	from (
+	select 
+	 case when c1.category < c2.category then c1.category else c2.category end as category1,
+	 case when c1.category < c2.category then c2.category else c1.category end as category2,
+	 l.isbn
+	from loan l
+	join category c1 on l.isbn = c1.isbn
+	join category c2 on l.isbn = c2.isbn and c1.category <> c2.category
+	) as pairs
+	group by category1, category2	
+	order by count desc
+	limit 3;
 
+--3.1.7  !!not sure if it works need more dummy data
+create view 5booksless as
+	select name, count(*) as books
+	from author
+	where name <> (
+	select name
+	from author
+	group by name
+	order by count(*) desc
+	limit 1
+	)
+	group by name
+	having count(*) >= (
+	select count(*)
+	from author
+	group by name
+	order by count(*) desc
+	limit 1
+	) -1;
