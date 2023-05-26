@@ -37,7 +37,7 @@ make sure php module exists:
 			restart
 				sudo service apache2 restart
 
-/* nessecary you need to run this every time you change the files */
+/* nessecary you need to run this every time you reupload (not change, but delete and paste again) the files */
 sudo chmod -R 777 /var/www
 
 
@@ -54,7 +54,19 @@ check is mod_reqwrite is enabled:
 		sudo a2enmod rewrite
 		sudo systemctl restart apache2
 
+exeute in mysql console:
+	FLUSH PRIVILEGES;
+	ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
 
+    Locate the PHP configuration file called php.ini. The location of this file may vary depending on your operating system and PHP installation.
+    Open php.ini in a text editor.
+    Search for the error_reporting directive. Uncomment it if it is commented out by removing the semicolon at the beginning of the line.
+    Set the value of error_reporting to E_ALL. This setting enables reporting of all types of errors, warnings, and notices.
+    Search for the display_errors directive. Uncomment it if necessary.
+    Set the value of display_errors to On. This setting allows PHP errors to be displayed on the screen.
+    Save the changes to php.ini and restart your web server for the changes to take effect.
+    
+sudo nano /etc/php/8.1/cli/php.ini
 
 
 
