@@ -33,6 +33,14 @@ create table if not exists user (
 	 references school(id) on delete cascade on update cascade
 ) engine=InnoDB default charset=utf8;
 
+create table if not exists session_tokens (
+	username varchar(20) not null,
+	token varchar(32) not null,
+	primary key (username, token),
+	constraint fk_token_username foreign key (username)
+	 references user(username) on delete cascade on update cascade
+) engine=InnoDB default charset=utf8;
+
 create table if not exists teacher (
 	username varchar(20) primary key,
 	handler_request boolean default False,
