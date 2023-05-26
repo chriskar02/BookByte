@@ -35,7 +35,7 @@ create table if not exists user (
 
 create table if not exists session_tokens (
 	username varchar(20) not null,
-	token varchar(32) not null,
+	token varchar(64) not null,
 	primary key (username, token),
 	constraint fk_token_username foreign key (username)
 	 references user(username) on delete cascade on update cascade

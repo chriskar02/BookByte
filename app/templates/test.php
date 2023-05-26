@@ -36,11 +36,18 @@ here we test features
 		return $output;
 	}
 
-	$query = "select username, name, password, email from user where user_verified = 1";
+  $query = "select username, name, password, email from user where user_verified = 1";
   $query = "select username, birth, isbn, category, name
 	from user natural join loan natural join book natural join teacher
 		  natural join category";
-  echo tableResults($conn, $query, []);
+  $query = "select * from user order by username asc limit 5";
+  echo tableResults($conn, $query, ['username', 'password']);
+  $query = "select username, token from session_tokens";
+  echo tableResults($conn, $query, ['username', 'token']);
+  $query = "desc session_tokens";
+  echo tableResults($conn, $query, ['username', 'token']);
+  $query = "desc user";
+  echo tableResults($conn, $query, ['username', 'token']);
 
 ?>
 

@@ -15,4 +15,5 @@ switch ($url) {
 	default: include 'templates/404.php';break;
 
 }
+
 ?>

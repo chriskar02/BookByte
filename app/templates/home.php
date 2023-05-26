@@ -1,11 +1,12 @@
 <?php
 
 function generateBookItem($title, $imageurl, $rating, $summary) {
-  $output = '<div class="item-card"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">';
+  $output = '<form action=""method="POST"class="item-card"><button type="submit"name="submit_book"class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">';
   $output .= '<img src="' . $imageurl .'"class="book-img"alt="book cover couldnt load">';
   $output .= '<p class="book-title">' . $title .'</p>';
+  $output .= '<input type="text"style="display:none;"name="book-title"value="' . $title .'"/>';
   $output .= '<div class="rating"style="--rating:' . $rating . '"></div></div>';
-  $output .= '<div class="flip-card-back">' . $summary . '</div></div></div></div>';
+  $output .= '<div class="flip-card-back">' . $summary . '</div></div></button></form>';
   return $output;
 }
 
@@ -14,8 +15,21 @@ function generateBookItem($title, $imageurl, $rating, $summary) {
 
 <?php
   include 'html/top.html';
-?>
+  include 'php/connect.php';
+  include 'php/session_auth.php';
+  include 'php/nav_buttons.php';
 
+  $conn = OpenCon();
+  $is_auth = getAuth($conn);
+  if(!$is_auth){
+    header("Location: login");
+    exit;
+  }
+
+  profile_option();
+  book_option();
+  logout_option($conn);
+?>
 <title>BookByte</title>
 <link rel="stylesheet" type="text/css" href="../static/css/nav.css">
 <link rel="stylesheet" type="text/css" href="../static/css/imports/button.css">

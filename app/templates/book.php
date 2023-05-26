@@ -32,6 +32,17 @@ function generateSchoolAvail($sch_name, $sch_city, $free_copies) {
 <?php
   include 'html/top.html';
 ?>
+<?php
+  include 'php/connect.php';
+  include 'php/session_auth.php';
+
+  $conn = OpenCon();
+  $is_auth = getAuth($conn);
+  if(!$is_auth){
+    header("Location: login");
+    exit;
+  }
+?>
 
 <title>[Book Title Here] | BookByte</title>
 <link rel="stylesheet" type="text/css" href="../static/css/nav.css">
