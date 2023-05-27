@@ -4,9 +4,10 @@ function logout_option($conn){
 
 	if(isset($_POST['submit_logout'])){
 		$username = $_COOKIE['username'];
+		$session_token = $_COOKIE['session_token'];
 		unset($_COOKIE['username']);
 		unset($_COOKIE['session_token']);
-		$query = "delete from session_tokens where username = '" . $username . "'";
+		$query = "delete from session_tokens where username = '" . $username . "' and token = '" . $session_token . "'";
 		$result = mysqli_query($conn, $query);
 		if($result){
 			#logout
