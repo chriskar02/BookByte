@@ -81,3 +81,14 @@ body{
   top: 0px;
   left: 0px;
 }
+
+.feedback{
+	font-size: 0.85em;
+	font-style: italic;
+}
+.feedback.red{
+	color: red;
+}
+.feedback.green{
+	color: green;
+}

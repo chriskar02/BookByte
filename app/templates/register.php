@@ -1,5 +1,14 @@
 <?php
   include 'html/top.html';
+  include 'php/connect.php';
+  include 'php/session_auth.php';
+
+  $conn = OpenCon();
+  $is_auth = getAuth($conn);
+  if($is_auth){
+    header("Location: /");
+    exit;
+  }
 ?>
 
 <title>Register | BookByte</title>
@@ -14,27 +23,27 @@
 	<div class="main-title">
 		<img src="../static/assets/logo-light.png" alt="logo couldn't load">
 	</div>
-	<div class="main-input box-shadow">
+	<form class="main-input box-shadow"action=""method="post">
 
 		<div class="form__group field">
-		    <input type="input" class="form__field" placeholder="Name" required="">
+		    <input type="input" class="form__field" name="username"placeholder="" maxlength="20"required="">
 		    <label for="name" class="form__label">USERNAME</label>
 		</div>
 		<br class="half-br">
 		<div class="form__group field">
-				<input type="password" class="form__field" placeholder="Name" required="">
+				<input type="password" class="form__field" name="password"placeholder="" maxlength="40"required="">
 				<label for="name" class="form__label">PASSWORD</label>
 		</div>
 
 		<br class="half-br">
 		<div class="form__group field">
-				<input type="input" class="form__field" placeholder="Name" required="">
+				<input type="input" class="form__field"name="email" placeholder=""maxlength="60" required="">
 				<label for="name" class="form__label">EMAIL</label>
 		</div>
 
 		<br class="half-br">
 		<div class="form__group field">
-				<input type="input" class="form__field" placeholder="Name" required="">
+				<input type="input" class="form__field" name="fullname"placeholder="" maxlength="50"required="">
 				<label for="name" class="form__label">FULL NAME</label>
 		</div>
 
@@ -42,11 +51,17 @@
 		<div class="input-div-center">
 		<div class="dropdown">
 
-		  <select class="dropdown-select">
-		    <option value="default" disabled selected hidden>select school</option>
-		    <option value="item1">Item 1</option>
-		    <option value="item2">Item 2</option>
-		    <option value="item3">Item 3</option>
+		  <select class="dropdown-select"name="school-select" required="">
+		    <option value="">select school</option>
+        <?php
+
+        $query = "select name, city, id from school";
+        $result = mysqli_query($conn, $query);
+        while($tr = mysqli_fetch_row($result)){
+          echo '<option value="'.$tr[2].'">'. $tr[0] .' of '.$tr[1].'</option>';
+        }
+
+        ?>
 		  </select>
 		</div>
 		</div>
@@ -54,7 +69,7 @@
 
 
 		<div class="input-div-center">
-			<button class="button">
+			<button class="button"type="submit"name="submit_register">
     		<span class="button_lg">
         	<span class="button_sl"></span>
         	<span class="button_text">REGISTER</span>
@@ -62,12 +77,46 @@
 			</button>
 		</div>
 
+    <?php
+      if(isset($_POST['submit_register'])){
+        $sch_id = $_POST['school-select'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $email = $_POST['email'];
+        $fullname = $_POST['fullname'];
+
+        $query = "select * from user where username = '" . $username . "'";
+        $result = mysqli_query($conn, $query);
+        if(mysqli_num_rows($result) > 0){
+          $tr = mysqli_fetch_row($result);
+          echo "<div class='feedback red'>username exists!</div>";
+        }
+        else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+          echo "<div class='feedback red'>invalid emailaddress!</div>";
+        }
+        else{
+          #valid input
+          #save to database
+          $query = "insert into user (username, password, email, name, sch_id, user_verified) values ('".$username."','".$password."','".$email."','".$fullname."','".$sch_id."','0')";
+          if($result = mysqli_query($conn, $query)){
+            #success
+            auth_login($conn, $username, $password);
+          }
+          else{
+            echo "<div class='feedback red'>[database error] registration failed, try again.</div>";
+          }
+        }
+      }
+
+      #CloseCon($conn);
+    ?>
+
 		<div class="input-div-center">
 				<label class="small">Already a user? </label>
-				<a class="small-red"href="login.html">Log In</a>
+				<a class="small-red"href="/login">Log In</a>
 		</div>
 
-	</div>
+	</form>
 </div>
 
 <script>

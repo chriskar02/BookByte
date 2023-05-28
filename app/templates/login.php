@@ -6,7 +6,7 @@
   $conn = OpenCon();
   $is_auth = getAuth($conn);
   if($is_auth){
-    header("Location: home");
+    header("Location: /");
     exit;
   }
 
@@ -46,37 +46,7 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $query = "select username, password from user where username = '" . $username . "'";
-        $result = mysqli_query($conn, $query);
-        $tr = mysqli_fetch_row($result);
-        if($tr[1] == $password){
-
-          #create cookies (expire after 3 days: (86400 * 3))
-          $sessionToken = bin2hex(random_bytes(32));
-          $ret = setcookie('session_token', $sessionToken, time() + (86400 * 3), '/');
-          if(!$ret){
-            echo "<div class='feedback red'>cookie set failed, try again.</div>";
-          }
-          $ret = setcookie('username', $username, time() + (86400 * 3), '/');
-          if(!$ret){
-            echo "<div class='feedback red'>cookie set failed, try again.</div>";
-          }
-          #add token to databse
-          $query = "insert into session_tokens (username, token) values ('" . $username . "','" . $sessionToken . "')";
-          $result = mysqli_query($conn, $query);
-          if($result){
-            #login
-            header("Location: home");
-            exit;
-          }
-          else{
-            echo "<div class='feedback red'>login failed, try again.</div>";
-          }
-          echo "<div class='feedback green'>logging in...</div>";
-        }
-        else{
-          echo "<div class='feedback red'>incorrect username or password.</div>";
-        }
+        auth_login($conn, $username, $password);
       }
 
       CloseCon($conn);

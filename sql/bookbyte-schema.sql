@@ -100,7 +100,7 @@ create table if not exists ratings (
 	date timestamp not null default current_timestamp on update current_timestamp,
 	stars smallint not null,
 	description text,
-	rating_verified boolean,
+	rating_verified boolean default 0,
 	primary key (username, isbn),
 	constraint fk_ratings_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
@@ -111,10 +111,11 @@ create table if not exists ratings (
 create table if not exists loan (
 	username varchar(20) not null,
 	isbn char(10) not null,
-	handler_username varchar(20) not null,
+	handler_username varchar(20) default null,
 	date timestamp not null default current_timestamp on update current_timestamp,
 	sch_id int not null,
 	in_out enum('borrowed','returned') not null,
+	transaction_verified boolean default 0,
 	primary key (username, isbn, date, in_out),
 	constraint fk_loans_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
@@ -140,6 +141,8 @@ create table if not exists reservation (
 
 
 
+create view verified_ratings as
+	select * from ratings where rating_verified = 1;
 
 
 

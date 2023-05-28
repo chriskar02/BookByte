@@ -2,6 +2,11 @@
 
 $url = $_GET['url'];
 
+if (preg_match("/book\/(.*)/", $url, $matches)){
+  $isbn = $matches[1];
+	$url = "book";
+}
+
 switch ($url) {
 
 	case '': include 'templates/home.php';break;

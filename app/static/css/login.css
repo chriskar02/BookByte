@@ -60,13 +60,3 @@
 	font-size:0.7em;
 	color: #ff4655;
 }
-.feedback{
-	font-size: 0.85em;
-	font-style: italic;
-}
-.feedback.red{
-	color: red;
-}
-.feedback.green{
-	color: green;
-}

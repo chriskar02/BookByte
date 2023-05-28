@@ -11,7 +11,7 @@ function logout_option($conn){
 		$result = mysqli_query($conn, $query);
 		if($result){
 			#logout
-			header("Location: login");
+			header("Location: /login");
 			exit;
 		}
 		else{
@@ -25,7 +25,7 @@ function logout_option($conn){
 function profile_option(){
 	if(isset($_POST['submit_profile'])){
 		$username = $_COOKIE['username'];
-		header("Location: user");
+		header("Location: /user");
 		exit;
 	}
 }
@@ -33,8 +33,8 @@ function profile_option(){
 /* button for book must have name attribute = 'submit_book' and title element name attr = 'book-title' */
 function book_option(){
 	if(isset($_POST['submit_book'])){
-		$title = $_POST['book-title'];
-		header("Location: book");
+		$isbn = $_POST['book-isbn'];
+		header("Location: /book/".$isbn);
 		exit;
 	}
 }

@@ -1,6 +1,6 @@
 <header>
   <div class="responsive-menu header-left">
-    <img src="../static/assets/logo-light.png"class="header-logo"onclick="window.location='home';" />
+    <img src="../static/assets/logo-light.png"class="header-logo"onclick="window.location='/home';" />
   </div>
 
   <form action=""method="POST"class="responsive-menu header-right">
