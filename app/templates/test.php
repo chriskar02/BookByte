@@ -15,7 +15,7 @@ here we test features
 	include 'php/html_disp.php';
 	$conn = OpenCon();
 
-  $query = "select user.username, user.password, session_tokens.token from user left join session_tokens on user.username = session_tokens.username order by user.username limit 10";
+  $query = "select * from user left join session_tokens on user.username = session_tokens.username order by user.username limit 10";
   echo tableResults($conn, $query, ['username', 'password', 'token']);
 
   $query = "SELECT * FROM school_storage WHERE isbn = '1551303345';";

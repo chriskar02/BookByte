@@ -24,7 +24,7 @@ td {
 }
 tr {
   border-top: 1px solid #C1C3D1;
-  border-bottom-: 1px solid #C1C3D1;
+  border-bottom: 1px solid #C1C3D1;
   color:#666B85;
   font-size:16px;
   font-weight:normal;
@@ -33,5 +33,4 @@ tr {
 tr:hover td {
   background:#4E5066;
   color:#FFFFFF;
-  border-top: 1px solid #22262e;
 }

@@ -92,3 +92,29 @@ body{
 .feedback.green{
 	color: green;
 }
+
+.icon-btn{
+  width: 35px;
+  height: 35px;
+  margin: 5px;
+  display: inline-block;
+  border-radius: 5px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+}
+.icon-btn:hover{
+  border: solid 1px transparent;
+}
+.edit-btn{
+  background-image:url('../assets/edit.svg');
+}
+.save-btn{
+  background-image:url('../assets/save.svg');
+}
+.cancel-btn{
+  background-image:url('../assets/cancel.svg');
+}

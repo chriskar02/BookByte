@@ -6,6 +6,10 @@ if (preg_match("/book\/(.*)/", $url, $matches)){
   $isbn = $matches[1];
 	$url = "book";
 }
+if (preg_match("/user\/(.*)/", $url, $matches)){
+  $page_username = $matches[1];
+	$url = "user";
+}
 
 switch ($url) {
 

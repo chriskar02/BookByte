@@ -2,7 +2,7 @@
 
 function tableResults($conn, $query, $cols) {
   $result = mysqli_query($conn, $query);
-  $output = '<table><tr><thead><tr>';
+  $output = '<table class="custom-table"><tr><thead><tr>';
   foreach ($cols as $value) {
     $output .= '<th>' . $value . '</th>';
   }

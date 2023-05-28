@@ -31,3 +31,65 @@ main{
   width: 100%;
   text-align: center;
 }
+
+.userpage{
+	display: none;
+  text-align: center;
+  padding: 7px;
+}
+#page1{
+	display: block;
+}
+
+.details-card{
+  border:none;
+  display: inline-block;
+  margin:auto;
+  border-radius: 5px;
+  color: #121212;
+  background-color: #dedede;
+  width: 90%;
+  padding: 17px 10px;
+  font-size: 0.85em;
+}
+.details-card-left, .details-card-right{
+  background-color: transparent;
+  display: inline-block;
+  text-align: left;
+}
+.details-card-left{
+  width: 33%;
+}
+.details-card-right{
+  width: 63%;
+  color: #454545;
+}
+.details-card-row{
+  border: none;
+  width: 100%;
+  padding: 8px;
+}
+.details-card-hr{
+  margin: 3px 16px;
+  color: #ababab;
+}
+.details-control{
+  width: 100%;
+  padding-right: 30px;
+  text-align: right;
+  height: 40px;
+}
+.details-control .icon-btn{
+  float: right;
+}
+.details-right-label, .details-right-input{
+  width: 100%;
+}
+.details-right-input{
+  display: none;
+}
+.details-right-input > input{
+  width: 100%;
+  padding: 3px 5px;
+  border: none;
+}
