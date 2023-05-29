@@ -86,6 +86,7 @@
   ?>
 
 
+
   <main>
     <div class="card">
       <div class="left">
@@ -197,22 +198,14 @@
           }
           $query = "SELECT school.name, school.city, school_storage.copies, COUNT(CASE WHEN loan.in_out = 'borrowed' THEN 1 END) - COUNT(CASE WHEN loan.in_out = 'returned' THEN 1 END) AS available, school_storage.sch_id
           FROM school_storage
-          JOIN school ON school.id = school_storage.sch_id
+          RIGHT JOIN school ON school.id = school_storage.sch_id
           LEFT JOIN loan ON loan.isbn = school_storage.isbn AND loan.sch_id = school.id
-          WHERE school_storage.copies > 0
-            AND school_storage.isbn = '".$isbn."'
+          WHERE school_storage.isbn = '".$isbn."'
           GROUP BY school.name, school.city, school_storage.copies
           ORDER BY school_storage.copies DESC";
           $result = mysqli_query($conn, $query);
-          $counter = 0;
           while($tr = mysqli_fetch_row($result)){
-            if($tr[2]-$tr[3] > 0){
-              $counter += 1;
-              echo generateSchoolAvail($tr[0], $tr[1], ($tr[2]-$tr[3])." (".$tr[3]." currently borrowed)", $rem_loans, $rem_rsv, $tr[4]);
-            }
-          }
-          if(!$counter){
-            echo "<div class='feedback red'>book is unavailable</div>";
+            echo generateSchoolAvail($tr[0], $tr[1], ($tr[2]-$tr[3])." (".$tr[3]." currently borrowed)", $rem_loans, $rem_rsv, $tr[4]);
           }
 
         ?>
@@ -239,7 +232,13 @@
               <span class="button_sl"></span>
               <span class="button_text">EDIT REVIEW</span>
             </span>
-          </button>';
+          </button>
+          <form action=""method="post"><button class="button"type="submit" name="submit_delete_rev" >
+            <span class="button_lg">
+              <span class="button_sl"></span>
+              <span class="button_text" >DELETE REVIEW</span>
+            </span>
+          </button></form>';
         }
         else{
           #else create button for new review
@@ -251,6 +250,18 @@
             </span>
           </button>';
         }
+        ?>
+        <?php
+          if(isset($_POST['submit_delete_rev'])){
+            $query = "delete from ratings where username = '".$username."' and isbn = '".$isbn."'";
+            if($result = mysqli_query($conn, $query)){
+              echo "<div class='feedback green'>deleted review</div>";
+              echo '<script>window.location.href = window.location.href;</script>';
+            }
+            else{
+              echo "<div class='feedback red'>[database error] review submit failed, try again.</div>";
+            }
+          }
         ?>
         <br>
         <div id="new-review">
@@ -314,6 +325,8 @@
     <br>
     <br>
   </main>
+
+
 
 <script type="text/javascript">
 	function selectThisBtn(d){

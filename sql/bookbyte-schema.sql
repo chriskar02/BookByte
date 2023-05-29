@@ -14,12 +14,13 @@ USE BookByte;
 
 create table if not exists school (
 	id int primary key auto_increment,
-	name varchar(60) not null unique,
+	name varchar(60) not null,
 	email varchar(60) not null unique,
 	address varchar(60) not null unique,
 	city varchar(30) not null,
 	principal_name varchar(50) not null,
-	phone int not null unique
+	phone int not null unique,
+	unique(name, city)
 ) engine=InnoDB default charset=utf8;
 
 create table if not exists user (
@@ -112,10 +113,10 @@ create table if not exists loan (
 	username varchar(20) not null,
 	isbn char(10) not null,
 	handler_username varchar(20) default null,
-	date timestamp not null default current_timestamp on update current_timestamp,
+	date timestamp not null default current_timestamp,
 	sch_id int not null,
 	in_out enum('borrowed','returned') not null,
-	transaction_verified boolean default 0,
+	transaction_verified int default 0, /*0: not berified borrow, 1: verified borrow, 2: (verified) return*/
 	primary key (username, isbn, date, in_out),
 	constraint fk_loans_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
@@ -128,7 +129,7 @@ create table if not exists loan (
 create table if not exists reservation (
 	username varchar(20) not null,
 	isbn char(10) not null,
-	date timestamp not null default current_timestamp on update current_timestamp,
+	date timestamp not null default current_timestamp,
 	sch_id int not null,
 	primary key (username, isbn),
 	constraint fk_rsv_username foreign key (username)
@@ -144,7 +145,8 @@ create table if not exists reservation (
 create view verified_ratings as
 	select * from ratings where rating_verified = 1;
 
-
+create view verified_handler as
+	select username, birth from teacher where handler_verified = 1;
 
 
 

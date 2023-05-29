@@ -118,3 +118,6 @@ body{
 .cancel-btn{
   background-image:url('../assets/cancel.svg');
 }
+.custom-hr{
+  margin:25px 20px 10px 20px;
+}

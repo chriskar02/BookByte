@@ -23,23 +23,30 @@
       }
     }
     ?>
-    <button class="save-btn icon-btn"name="submit-new-details"type="submit"></button>
-    <label id="editbtn"class="edit-btn icon-btn"onclick="editDetails()"></label>
-    <label id="cancelbtn"class="cancel-btn icon-btn"style="display:none;"onclick="cancelEdit()"></label>
-    <script>
-      function cancelEdit(){
-        document.getElementById('cancelbtn').style.display='none';
-        document.getElementById('editbtn').style.display='inline-block';
-        for(const i of document.getElementsByClassName('details-right-input')) i.style.display='none';
-        for(const i of document.getElementsByClassName('details-right-label')) i.style.display='inline-block';
-      }
-      function editDetails(){
-        document.getElementById('cancelbtn').style.display='inline-block';
-        document.getElementById('editbtn').style.display='none';
-        for(const i of document.getElementsByClassName('details-right-label')) i.style.display='none';
-        for(const i of document.getElementsByClassName('details-right-input')) i.style.display='inline-block';
-      }
-    </script>
+    <?php
+    if($is_valid_handler || $is_admin || $is_my_profile) {
+      echo '<button class="save-btn icon-btn"name="submit-new-details"type="submit"></button>
+      <label id="editbtn"class="edit-btn icon-btn"onclick="editDetails()"></label>
+      <label id="cancelbtn"class="cancel-btn icon-btn"style="display:none;"onclick="cancelEdit()"></label>';
+
+      echo "<script>
+        function cancelEdit(){
+          document.getElementById('cancelbtn').style.display='none';
+          document.getElementById('editbtn').style.display='inline-block';
+          for(const i of document.getElementsByClassName('details-right-input')) i.style.display='none';
+          for(const i of document.getElementsByClassName('details-right-label')) i.style.display='inline-block';
+        }
+        function editDetails(){
+          document.getElementById('cancelbtn').style.display='inline-block';
+          document.getElementById('editbtn').style.display='none';
+          for(const i of document.getElementsByClassName('details-right-label')) i.style.display='none';
+          for(const i of document.getElementsByClassName('details-right-input')) i.style.display='inline-block';
+        }
+      </script>";
+    }
+
+
+    ?>
   </div>
   <div class="details-card-row">
     <div class="details-card-left">Username</div>
@@ -100,12 +107,22 @@
 <br>
 <br>
 <form action=""method="post">
-  <button class="button" name="submit_clear_tokens" type="submit">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">DELETE SESSION TOKENS</span>
-    </span>
-  </button>
+  <?php
+  if($is_valid_handler || $is_admin || $is_my_profile) {
+    echo '<button class="button" name="submit_clear_tokens" type="submit">
+      <span class="button_lg">
+        <span class="button_sl"></span>
+        <span class="button_text">DELETE SESSION TOKENS</span>
+      </span>
+    </button>';
+  }
+
+
+
+
+
+  ?>
+
   <?php
   if(isset($_POST['submit_clear_tokens'])){
     $sess_token = $_COOKIE['session_token'];
@@ -122,12 +139,17 @@
 </form>
 <br>
 <form action=""method="post">
-  <button class="button" name="submit_delete_account" type="submit">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">DELETE ACCOUNT</span>
-    </span>
-  </button>
+  <?php
+  if($is_valid_handler || $is_admin || $is_my_profile){
+    echo '<button class="button" name="submit_delete_account" type="submit">
+      <span class="button_lg">
+        <span class="button_sl"></span>
+        <span class="button_text">DELETE ACCOUNT</span>
+      </span>
+    </button>';
+  }
+  ?>
+
   <?php
   if(isset($_POST['submit_delete_account'])){
     $query = "delete from user where username = '".$page_username."'";

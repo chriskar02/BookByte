@@ -1,160 +1,132 @@
 <p>User Loans</p>
+<center>
 <?php
 
 
-$query = "select username, isbn, date, name, in_out, transaction_verified from loan natural join school where username = '".$page_username."'";
+$query = "select date, title, name, city, in_out, transaction_verified, book.isbn, sch_id from loan join book on loan.isbn = book.isbn join school on school.id = loan.sch_id where username = '".$page_username."' order by loan.date desc";
 $result = mysqli_query($conn, $query);
-$output = '<table class="custom-table"><tr><thead><tr>';
-$cols = ['Book', 'Date', 'Action'];
-foreach ($cols as $value) {
-  $output .= '<th>' . $value . '</th>';
-}
-$output .= '</tr></thead><tbody>';
+$output = '<table class="custom-table"><tr><thead><tr><th>Date</th><th>Book Title</th><th>Borrowed From</th><th>Action</th><th>Verified</th></tr></thead><tbody>';
 while($tr = mysqli_fetch_row($result)){
   $output .= '<tr>';
-  foreach ($tr as $value) {
-    $output .= '<td>' . $value . '</td>';
+  $output .= '<td>' . $tr[0] . '</td>';
+  $output .= '<td>' . $tr[1] . '</td>';
+  $output .= '<td>' . $tr[2] . ' of ' . $tr[3] . '</td>';
+  $output .= '<td>' . $tr[4] . '</td>';
+  if($tr[5] == 0 && $tr[4] == 'borrowed'){
+    if($is_valid_handler || $is_admin){
+      $output .= '<td><form action=""method="post">
+        <button class="button" name="submit_verify" type="submit">
+          <span class="button_lg">
+            <span class="button_sl"></span>
+            <span class="button_text">verify</span>
+          </span>
+        </button>
+        <button class="button" name="submit_cancel_borrow1" type="submit">
+          <span class="button_lg">
+            <span class="button_sl"></span>
+            <span class="button_text">cancel</span>
+          </span>
+        </button>
+        <input type="text" value="'.$tr[0].'" name="date" style="display:none;"/>
+        <input type="text" value="'.$tr[6].'" name="isbn" style="display:none;"/>
+      </form></td>';
+    }
+    else{
+      $output .= '<td><form action=""method="post">
+      <button class="button" name="submit_cancel_borrow1" type="submit">
+        <span class="button_lg">
+          <span class="button_sl"></span>
+          <span class="button_text">cancel</span>
+        </span>
+      </button>
+        <input type="text" value="'.$tr[0].'" name="date" style="display:none;"/>
+        <input type="text" value="'.$tr[6].'" name="isbn" style="display:none;"/>
+      </form></td>';
+    }
+  }
+  else if($tr[5] == 1 && $tr[4] == 'borrowed'){
+    if($is_valid_handler || $is_admin){
+      $output .= '<td><form action=""method="post">
+        <button class="button" name="submit_return" type="submit">
+          <span class="button_lg">
+            <span class="button_sl"></span>
+            <span class="button_text">return</span>
+          </span>
+        </button>
+        <input type="text" value="'.$tr[0].'" name="date" style="display:none;"/>
+        <input type="text" value="'.$tr[6].'" name="isbn" style="display:none;"/>
+        <input type="text" value="'.$tr[7].'" name="sch_id" style="display:none;"/>
+      </form></td>';
+    }
+    else{
+      $output .= "<td>verified</td>";
+    }
+  }
+  else{
+    $output .= "<td>completed</td>";
   }
   $output .= '</tr>';
 }
 $output .= '</tbody></table>';
-return $output;
+echo $output;
 
+if(isset($_POST['submit_cancel_borrow1'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_borrower = $page_username;
 
-$result = mysqli_query($conn, $query);
-if($result){
-  echo "<label class='feedback green'>changes saved! Refreshing page </label>";
-  echo '<script>window.location.href = window.location.href;</script>';
+  $query = "delete from loan where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."' and in_out = 'borrowed'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>verified!</label>";
+    echo '<script>window.location.href = window.location.href;</script>';
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
 }
-else{
-  echo "<label class='feedback red'>[database error] make sure the email is not taken (unique).</label>";
+if(isset($_POST['submit_verify'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_handler = $username;
+  $form_borrower = $page_username;
+
+  $query = "update loan set transaction_verified = 1, handler_username = '".$form_handler."' where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>verified!</label>";
+    echo '<script>window.location.href = window.location.href;</script>';
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
 }
+if(isset($_POST['submit_return'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_schid = $_POST['sch_id'];
+  $form_handler = $username;
+  $form_borrower = $page_username;
 
+  $query = "update loan set transaction_verified = 2 where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>successfully upadted last transaction.</label>";
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
 
-
+  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$form_borrower."', '".$form_isbn."', '".$form_handler."', '".$form_schid."', 'returned', '1')";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>successfully returned!</label>";
+    echo '<script>window.location.href = window.location.href;</script>';
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
+}
 ?>
 
-
-
-
-<form class="details-card"action=""method="post">
-  <div class="details-control">
-
-    <button class="save-btn icon-btn"name="submit-new-details"type="submit"></button>
-    <label id="editbtn"class="edit-btn icon-btn"onclick="editDetails()"></label>
-    <label id="cancelbtn"class="cancel-btn icon-btn"style="display:none;"onclick="cancelEdit()"></label>
-    <script>
-      function cancelEdit(){
-        document.getElementById('cancelbtn').style.display='none';
-        document.getElementById('editbtn').style.display='inline-block';
-        for(const i of document.getElementsByClassName('details-right-input')) i.style.display='none';
-        for(const i of document.getElementsByClassName('details-right-label')) i.style.display='inline-block';
-      }
-      function editDetails(){
-        document.getElementById('cancelbtn').style.display='inline-block';
-        document.getElementById('editbtn').style.display='none';
-        for(const i of document.getElementsByClassName('details-right-label')) i.style.display='none';
-        for(const i of document.getElementsByClassName('details-right-input')) i.style.display='inline-block';
-      }
-    </script>
-  </div>
-  <div class="details-card-row">
-    <div class="details-card-left">Username</div>
-    <div class="details-card-right"><?php echo $page_username; ?></div>
-  </div>
-  <hr class="details-card-hr">
-  <div class="details-card-row">
-    <div class="details-card-left">Password</div>
-    <div class="details-card-right">
-      <div class="details-right-label"><?php echo $password; ?></div>
-      <div class="details-right-input"><input type="text"name="password"value="<?php echo $password; ?>" required=""></div>
-    </div>
-  </div>
-  <hr class="details-card-hr">
-  <div class="details-card-row">
-    <div class="details-card-left">Full Name</div>
-    <div class="details-card-right">
-      <div class="details-right-label"><?php echo $name; ?></div>
-      <div class="details-right-input"><input type="text"name="name"value="<?php echo $name; ?>" required=""></div>
-    </div>
-  </div>
-  <hr class="details-card-hr">
-  <div class="details-card-row">
-    <div class="details-card-left">Email</div>
-    <div class="details-card-right">
-      <div class="details-right-label"><?php echo $email; ?></div>
-      <div class="details-right-input"><input type="text"name="email"value="<?php echo $email; ?>" required=""></div>
-    </div>
-  </div>
-  <hr class="details-card-hr">
-  <div class="details-card-row">
-    <div class="details-card-left">Verified</div>
-    <div class="details-card-right"><?php if($user_verified) echo "Yes"; else echo "No" ?></div>
-  </div>
-  <hr class="details-card-hr">
-  <div class="details-card-row">
-    <div class="details-card-left">School</div>
-    <div class="details-card-right">
-      <div class="details-right-label"><?php echo $sch_full_name; ?></div>
-      <div class="details-right-input">
-        <select class="dropdown-select"name="sch-id" required="">
-  		    <option value="">select school</option>
-          <?php
-
-          $query = "select name, city, id from school";
-          $result = mysqli_query($conn, $query);
-          while($tr = mysqli_fetch_row($result)){
-            echo '<option value="'.$tr[2].'">'. $tr[0] .' of '.$tr[1].'</option>';
-          }
-
-          ?>
-  		  </select>
-      </div>
-    </div>
-  </div>
-</form>
-
-<br>
-<br>
-<form action=""method="post">
-  <button class="button" name="submit_clear_tokens" type="submit">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">DELETE SESSION TOKENS</span>
-    </span>
-  </button>
-  <?php
-  if(isset($_POST['submit_clear_tokens'])){
-    $sess_token = $_COOKIE['session_token'];
-    $query = "delete from session_tokens where username = '".$page_username."' and token <> '".$sess_token."'";
-    $result = mysqli_query($conn, $query);
-    if($result){
-      echo "<label class='feedback green'>tokens deleted!</label>";
-    }
-    else{
-      echo "<label class='feedback red'>[database error] failed, try again.</label>";
-    }
-  }
-  ?>
-</form>
-<br>
-<form action=""method="post">
-  <button class="button" name="submit_delete_account" type="submit">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">DELETE ACCOUNT</span>
-    </span>
-  </button>
-  <?php
-  if(isset($_POST['submit_delete_account'])){
-    $query = "delete from user where username = '".$page_username."'";
-    $result = mysqli_query($conn, $query);
-    if($result){
-      echo "<label class='feedback green'>account deleted!</label>";
-    }
-    else{
-      echo "<label class='feedback red'>[database error] failed, try again.</label>";
-    }
-  }
-  ?>
-</form>
+</center>

@@ -13,13 +13,13 @@ The .htaccess file redirects all requests to index.php, which is the file that h
 
 notes:
 make sure php module exists:
-	sudo apt-get install php
-		confirm install: php -v
-	sudo a2enmod php8.1
+	`sudo apt-get install php`
+		confirm install: `php -v`
+	`sudo a2enmod php8.1`
 		(where 8.1 may be different for you, ckeck php -v
 		  also if it is 8.1.2 only add 8.1)
 		(confirm module enabled)
-	sudo service apache2 restart
+	`sudo service apache2 restart`
 	open php.ini and make sure that short_open_tag = On:
 		cat /etc/php/php.ini or
 			/etc/phpX/php.ini (where "X" represents the PHP version number), or
@@ -38,7 +38,7 @@ make sure php module exists:
 				sudo service apache2 restart
 
 /* nessecary you need to run this every time you reupload (not change, but delete and paste again) the files */
-sudo chmod -R 777 /var/www
+`sudo chmod -R 777 /var/www`
 
 
 in /etc/apache2/apache2.conf (use sudo):
@@ -66,7 +66,7 @@ exeute in mysql console:
     Set the value of display_errors to On. This setting allows PHP errors to be displayed on the screen.
     Save the changes to php.ini and restart your web server for the changes to take effect.
     
-sudo nano /etc/php/8.1/cli/php.ini
+`sudo nano /etc/php/8.1/cli/php.ini`
 
 
 

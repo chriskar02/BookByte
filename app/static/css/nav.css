@@ -41,7 +41,20 @@ header > img:hover{
   display: inline-block;
 }
 
-@media only screen and (max-width: 768px){
+.tag{
+  display: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.7em;
+  padding: 1px;
+  margin: 0px 8px;
+}
+.green{background-color:#5cff61;color:#121212;}
+.darkgreen{background-color:#328034;color:#efefef;}
+.orange{background-color:#ffa229;color:#121212;}
+.blue{background-color:#28a6e0;color:#efefef;}
+
+@media only screen and (max-width: 1150px){
   .responsive-menu{
     margin: auto;
     display: block;
