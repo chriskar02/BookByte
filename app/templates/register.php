@@ -66,6 +66,40 @@
 		</div>
 		</div>
 
+    <br class="half-br">
+		<div class="input-div-center">
+      register as
+		<div class="dropdown">
+
+		  <select class="dropdown-select"name="status-select" required="" onchange="statusChanged(this.value)">
+        <option value="student">student</option>
+		    <option value="teacher">teacher</option>
+		  </select>
+		</div>
+    <br class="half-br">
+    <div class="input-div-center" id="bdate2" style="display:none;">
+      birth date
+    <input type="date" id="bdate" name="bdate" value="" />
+    </div>
+		</div>
+    <script>
+      function statusChanged(s){
+        const bdate2 = document.getElementById('bdate2');
+        const bdate = document.getElementById('bdate');
+        if(s === 'teacher'){
+          bdate2.style.display='block';
+          bdate.required = true;
+        }
+        else{
+          bdate2.style.display='none';
+          bdate.required = false;
+        }
+      }
+
+    </script>
+
+
+
 
 
 		<div class="input-div-center">
@@ -80,6 +114,8 @@
     <?php
       if(isset($_POST['submit_register'])){
         $sch_id = $_POST['school-select'];
+        $status = $_POST['status-select'];
+        $bdate = $_POST['bdate'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $email = $_POST['email'];
@@ -100,7 +136,16 @@
           $query = "insert into user (username, password, email, name, sch_id, user_verified) values ('".$username."','".$password."','".$email."','".$fullname."','".$sch_id."','0')";
           if($result = mysqli_query($conn, $query)){
             #success
-            auth_login($conn, $username, $password);
+            if($status == 'teacher'){
+              $query = "insert into teacher (username, birth) values ('".$username."','".$bdate."')";
+              if($result = mysqli_query($conn, $query)){
+                echo "<div class='feedback green'>successful registration!</div>";
+                auth_login($conn, $username, $password);
+              }
+              else{
+                echo "<div class='feedback red'>[database error] account created, but not as teacher. Contact your network administrator.</div>";
+              }
+            }
           }
           else{
             echo "<div class='feedback red'>[database error] registration failed, try again.</div>";

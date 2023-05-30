@@ -6,6 +6,7 @@
   include 'php/html_disp.php';
   include 'php/connect.php';
   include 'php/nav_buttons.php';
+  include 'php/gen_functions.php';
   include 'php/session_auth.php';
 
   $conn = OpenCon();
@@ -59,17 +60,7 @@
 
 ?>
 
-<?php
-  #find if is teacher
-  $query = "select * from teacher where username = '".$username."'";
-  $result = mysqli_query($conn, $query);
-  if(mysqli_num_rows($result) > 0){
-    $max_loan_or_rsv = 1;
-  }
-  else{
-    $max_loan_or_rsv = 2;
-  }
-?>
+
 
 <title><?php echo $title; ?> | BookByte</title>
 <link rel="stylesheet" type="text/css" href="../static/css/nav.css">
@@ -83,6 +74,18 @@
 
   <?php
     include 'php/header.php';
+  ?>
+
+  <?php
+
+    $is_teacher = getStatus($conn, $username)[0];
+    if($is_teacher){
+      $max_loan_or_rsv = 1;
+    }
+    else{
+      $max_loan_or_rsv = 2;
+    }
+
   ?>
 
 
@@ -122,7 +125,7 @@
 
             $query = "SELECT username
             FROM (
-              SELECT username FROM loan WHERE username = '".$username."' and isbn = '".$isbn."'
+              SELECT username FROM loan WHERE username = '".$username."' and isbn = '".$isbn."' and transaction_verified <> 2 and in_out <> 'returned'
               UNION ALL
               SELECT username FROM reservation WHERE username = '".$username."' and isbn = '".$isbn."'
             ) AS combined_results";
@@ -168,44 +171,67 @@
         ?>
         <?php
           #print schools
-          $query = "select count(*) as borrowed from loan where username = '".$username."' and in_out = 'borrowed';";
+          $query = "select count(*) from loan where username = '".$username."' and in_out = 'borrowed' and datediff(now(),date) < 7";
           $result = mysqli_query($conn, $query);
           $tr = mysqli_fetch_row($result);
-          $borrowed = $tr[0];
+          $borrowed7 = $tr[0];
+          echo "<p>borrowed last 7 days: ".$borrowed7."</p>";
 
-          $query = "select count(*) as returned from loan where username = '".$username."' and in_out = 'returned'";
+          $query = "select count(*) from loan where username = '".$username."' and transaction_verified = 1 and datediff(now(),date) > 7";
           $result = mysqli_query($conn, $query);
           $tr = mysqli_fetch_row($result);
-          $returned = $tr[0];
+          echo "<p>overdue: ".$tr[0]."</p>";
 
-          $rem_loans = $max_loan_or_rsv - $borrowed + $returned;
+          $rem_loans = 0;
+          $rem_rsv = 0;
+          if($tr[0] > 0){
+            $rem_loans = 0;
+            $rem_rsv = 0;
+            echo "<p>you dont have availiable loans or reservations because you have overdue loans.</p>";
+          }
+          else{
+            $rem_loans = $max_loan_or_rsv - $borrowed7;
 
-          echo "your remaining loans: ".($rem_loans)."<br>";
-          if($rem_loans < 0){
-            echo "dummy_data/integιrty constraint bug: teacher cannot borrow more than 1.";
+            $query = "select count(*) from reservation where username = '".$username."' and datediff(now(),date) < 7";
+            $result = mysqli_query($conn, $query);
+            $tr = mysqli_fetch_row($result);
+            echo "<p>reservations last 7 days: ".$tr[0]."</p>";
+            $rem_rsv = $max_loan_or_rsv - $tr[0];
+            $rem_loans_or_rsv = $rem_loans - $tr[0];
+            if($rem_loans_or_rsv <= 0){
+              echo "<p>you don't have any availiable loans or reservations.</p>";
+            }
+            else{
+              echo "<p>your availiable loans or reservations: ".($rem_loans_or_rsv)."</p>";
+            }
           }
 
-          $query = "select count(*) as returned from reservation where username = '".$username."'";
-          $result = mysqli_query($conn, $query);
-          $tr = mysqli_fetch_row($result);
-          $reservations = $tr[0];
-
-          $rem_rsv = $max_loan_or_rsv - $reservations;
-
-          echo "your remaining reservations: ".($rem_rsv)."<br>";
-          if($rem_rsv < 0){
-            echo "dummy_data/integιrty constraint bug: teacher cannot reserve more than 1.";
-          }
-          $query = "SELECT school.name, school.city, school_storage.copies, COUNT(CASE WHEN loan.in_out = 'borrowed' THEN 1 END) - COUNT(CASE WHEN loan.in_out = 'returned' THEN 1 END) AS available, school_storage.sch_id
-          FROM school_storage
-          RIGHT JOIN school ON school.id = school_storage.sch_id
-          LEFT JOIN loan ON loan.isbn = school_storage.isbn AND loan.sch_id = school.id
-          WHERE school_storage.isbn = '".$isbn."'
-          GROUP BY school.name, school.city, school_storage.copies
-          ORDER BY school_storage.copies DESC";
+          $query = "SELECT s.name AS school_name, s.city AS school_city,
+    ss.copies AS total_copies,
+    COALESCE(loans.total_loans, 0) AS total_loans,
+    COALESCE(reservations.total_reservations, 0) AS total_reservations,
+    (ss.copies - COALESCE(loans.total_loans, 0) - COALESCE(reservations.total_reservations, 0)) AS available_copies,
+    s.id
+FROM school s
+JOIN school_storage ss ON s.id = ss.sch_id
+LEFT JOIN (
+    SELECT sch_id, isbn, COUNT(*) AS total_loans
+    FROM loan
+    WHERE isbn = '".$isbn."' and in_out = 'borrowed' and transaction_verified <> 2
+    GROUP BY sch_id, isbn
+) loans ON s.id = loans.sch_id
+LEFT JOIN (
+    SELECT sch_id, isbn, COUNT(*) AS total_reservations
+    FROM reservation
+    WHERE isbn = '".$isbn."'
+    GROUP BY sch_id, isbn
+) reservations ON s.id = reservations.sch_id
+WHERE ss.isbn = '".$isbn."'
+order by ss.copies desc
+;";
           $result = mysqli_query($conn, $query);
           while($tr = mysqli_fetch_row($result)){
-            echo generateSchoolAvail($tr[0], $tr[1], ($tr[2]-$tr[3])." (".$tr[3]." currently borrowed)", $rem_loans, $rem_rsv, $tr[4]);
+            echo generateSchoolAvail($tr[0], $tr[1], $tr[5], ($tr[3]+$tr[4]), $rem_loans_or_rsv, $tr[6]);
           }
 
         ?>

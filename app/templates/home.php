@@ -60,6 +60,11 @@
       		rating
   			</button>,
         </form>
+        <form action=""method="POST"style="display:inline-block;">
+        <button class="btn-simple-blue smaller"name="submit_sortby_copies">
+      		copies
+  			</button>,
+        </form>
         or select category:
         <form class="dropdown"action=""method="POST">
     		  <select class="dropdown-select smaller"name="submit_select_category"onchange="this.form.submit()">
@@ -118,7 +123,7 @@ ORDER BY rating DESC;
 
           if(isset($_POST['submit_sortby_pop'])){
 
-            $query = $query = "select b.title, avg(stars), b.summary, b.cover_image, total_count, total_borrowed_tb.total_borrowed as tot_bor, b.isbn
+            $query = "select b.title, avg(stars), b.summary, b.cover_image, total_count, total_borrowed_tb.total_borrowed as tot_bor, b.isbn
           from book as b left outer join verified_ratings on b.isbn = verified_ratings.isbn
           left join (
             select isbn, count(*) as total_borrowed
@@ -134,10 +139,31 @@ ORDER BY rating DESC;
           $result = mysqli_query($conn, $query);
 
             $tr = mysqli_fetch_row($result);
-            echo '<div class="inner">showing '.$tr[4].' results sorted by popularity</div><br><div class="inner">';
+            echo '<div class="inner">showing '.$tr[4].' results sorted by popularity (all-time count of loans - not current)</div><br><div class="inner">';
 
             while($tr){
               echo generateBookItem($tr[0], "data:image/jpeg;base64," . blobToSrc($tr[3]), $tr[1]*20, $tr[2], $tr[6]);
+              $tr = mysqli_fetch_row($result);
+            }
+
+            echo '</div>';
+          }
+
+          if(isset($_POST['submit_sortby_copies'])){
+
+            $query = "SELECT book.title, book.summary, book.cover_image, book.isbn, sum(copies) as ssum, avg(stars)
+            from school_storage
+            join book on school_storage.isbn = book.isbn
+            left outer join verified_ratings on book.isbn = verified_ratings.isbn
+            group by book.isbn, book.title
+            order by ssum desc;";
+            $result = mysqli_query($conn, $query);
+
+            $tr = mysqli_fetch_row($result);
+            echo '<div class="inner">showing '.mysqli_num_rows($result).' results sorted by number of total copies</div><br><div class="inner">';
+
+            while($tr){
+              echo generateBookItem($tr[0], "data:image/jpeg;base64," . blobToSrc($tr[2]), $tr[5]*20, $tr[1], $tr[3]);
               $tr = mysqli_fetch_row($result);
             }
 

@@ -2,6 +2,65 @@
 <center>
 <?php
 
+if(isset($_POST['submit_cancel_borrow1'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_borrower = $page_username;
+
+  $query = "delete from loan where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."' and in_out = 'borrowed'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>verified!</label>";
+    echo '<script>window.location.href = window.location.href;</script>';
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
+}
+if(isset($_POST['submit_verify'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_handler = $username;
+  $form_borrower = $page_username;
+
+  $query = "update loan set transaction_verified = 1, handler_username = '".$form_handler."' where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>verified!</label>";
+    echo "<script>window.location.href += '';</script>";
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
+}
+if(isset($_POST['submit_return'])){
+  $form_date = $_POST['date'];
+  $form_isbn = $_POST['isbn'];
+  $form_schid = $_POST['sch_id'];
+  $form_handler = $username;
+  $form_borrower = $page_username;
+
+  $query = "update loan set transaction_verified = 2 where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>successfully upadted last transaction.</label>";
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
+
+  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$form_borrower."', '".$form_isbn."', '".$form_handler."', '".$form_schid."', 'returned', '1')";
+  $result = mysqli_query($conn, $query);
+  if($result){
+    echo "<label class='feedback green'>successfully returned!</label>";
+
+    echo "<script>window.location.href += '';</script>";
+
+  }
+  else{
+    echo "<label class='feedback red'>[database error] failed, try again.</label>";
+  }
+}
 
 $query = "select date, title, name, city, in_out, transaction_verified, book.isbn, sch_id from loan join book on loan.isbn = book.isbn join school on school.id = loan.sch_id where username = '".$page_username."' order by loan.date desc";
 $result = mysqli_query($conn, $query);
@@ -70,63 +129,7 @@ while($tr = mysqli_fetch_row($result)){
 $output .= '</tbody></table>';
 echo $output;
 
-if(isset($_POST['submit_cancel_borrow1'])){
-  $form_date = $_POST['date'];
-  $form_isbn = $_POST['isbn'];
-  $form_borrower = $page_username;
 
-  $query = "delete from loan where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."' and in_out = 'borrowed'";
-  $result = mysqli_query($conn, $query);
-  if($result){
-    echo "<label class='feedback green'>verified!</label>";
-    echo '<script>window.location.href = window.location.href;</script>';
-  }
-  else{
-    echo "<label class='feedback red'>[database error] failed, try again.</label>";
-  }
-}
-if(isset($_POST['submit_verify'])){
-  $form_date = $_POST['date'];
-  $form_isbn = $_POST['isbn'];
-  $form_handler = $username;
-  $form_borrower = $page_username;
-
-  $query = "update loan set transaction_verified = 1, handler_username = '".$form_handler."' where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
-  $result = mysqli_query($conn, $query);
-  if($result){
-    echo "<label class='feedback green'>verified!</label>";
-    echo '<script>window.location.href = window.location.href;</script>';
-  }
-  else{
-    echo "<label class='feedback red'>[database error] failed, try again.</label>";
-  }
-}
-if(isset($_POST['submit_return'])){
-  $form_date = $_POST['date'];
-  $form_isbn = $_POST['isbn'];
-  $form_schid = $_POST['sch_id'];
-  $form_handler = $username;
-  $form_borrower = $page_username;
-
-  $query = "update loan set transaction_verified = 2 where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
-  $result = mysqli_query($conn, $query);
-  if($result){
-    echo "<label class='feedback green'>successfully upadted last transaction.</label>";
-  }
-  else{
-    echo "<label class='feedback red'>[database error] failed, try again.</label>";
-  }
-
-  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$form_borrower."', '".$form_isbn."', '".$form_handler."', '".$form_schid."', 'returned', '1')";
-  $result = mysqli_query($conn, $query);
-  if($result){
-    echo "<label class='feedback green'>successfully returned!</label>";
-    echo '<script>window.location.href = window.location.href;</script>';
-  }
-  else{
-    echo "<label class='feedback red'>[database error] failed, try again.</label>";
-  }
-}
 ?>
 
 </center>

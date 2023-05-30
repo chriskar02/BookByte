@@ -38,10 +38,8 @@ csv_to_sql('teacher', 'username, handler_request, birth, handler_verified')
 csv_to_sql('admin', 'username')
 csv_to_sql('school_storage', 'sch_id, isbn, copies')
 csv_to_sql('ratings', 'username, isbn, stars, description, rating_verified')
-csv_to_sql('loan', 'username, isbn, handler_username, date, sch_id, in_out')
+csv_to_sql('loan', 'username, isbn, handler_username, date, sch_id, in_out, transaction_verified')
 csv_to_sql('reservation', 'username, isbn, date, sch_id')
-
-
 
 
 

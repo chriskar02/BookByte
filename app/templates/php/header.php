@@ -5,6 +5,7 @@
 
   <form action=""method="POST"class="responsive-menu header-right">
     <label class="tag green"id="tag-valid-handler">HANDLER FOR THIS USER</label>
+    <label class="tag orange"id="tag-teacher">TEACHER</label>
     <label class="tag orange"id="tag-req-handler">REQUESTED HANDLER</label>
     <label class="tag blue"id="tag-verified-handler">VERIFIED HANDLER</label>
     <label class="tag darkgreen"id="tag-admin">ADMIN</label>

@@ -1,73 +1,16 @@
-<p>Add a new book to your school.</p>
+<p>Edit a book.</p>
+<p>note: ISBN cannot change, if you want to 'change' it add new book.</p>
 <center>
-  add existing:
-  <form action="" method="post" enctype="multipart/form-data" style="max-width: 700px;">
-
-    <div class="form__group field">
-      <input type="input" name="isbn" class="form__field" required maxlength="10">
-      <label for="username" class="form__label">ISBN 10</label>
-    </div>
-    <br class="half-br">
-    <div class="form__group field">
-      <input type="number" name="copies" class="form__field"  required>
-      <label for="username" class="form__label">Number of copies (total - including current copies)</label>
-    </div>
-    <br class="half-br">
-    <br class="half-br">
-    <button class="button" name="submit_existing_book" type="submit">
-        <span class="button_lg">
-          <span class="button_sl"></span>
-          <span class="button_text">submit</span>
-        </span>
-      </button>
-  </form>
-  <?php
-
-  if(isset($_POST['submit_existing_book'])){
-    $fisbn = $_POST['isbn'];
-    $fcopies = $_POST['copies'];
-    $query = "select isbn from book where isbn = '".$fisbn."'";
-    $result = mysqli_query($conn, $query);
-    if(mysqli_num_rows($result) > 0){
-      # book exists in book db, so just add copies
-
-      $query = "select isbn from school_storage where isbn = '".$fisbn."' and sch_id = '".$sch_id."'";
-      $result = mysqli_query($conn, $query);
-      if(mysqli_num_rows($result) > 0){
-        #already have this book, so update
-        $query = "update school_storage set copies = '".$fcopies."' where sch_id = '".$sch_id."' and isbn = '".$fisbn."'";
-      }
-      else{
-        #add new
-        $query = "insert into school_storage (sch_id, isbn, copies) values ('".$sch_id."', '".$fisbn."', '".$fcopies."')";
-      }
-      #echo $query;
-      $result = mysqli_query($conn, $query);
-      if($result){
-        echo "<label class='feedback green'>added !</label>";
-      }
-      else {
-        echo "<label class='feedback green'>[database error]: possible error: too many copies.</label>";
-      }
-    }
-    else{
-      echo "<label class='feedback red'>Book does not exist.</label>";
-    }
-  }
-  ?>
-  <br>
-  <hr>
-or add new:
 
 <?php
 
 
-if(isset($_POST['submit_up_book'])){
+if(isset($_POST['submit_update_book'])){
   $fisbn = $_POST['isbn'];
   $query = "select isbn from book where isbn = '".$fisbn."'";
   $result = mysqli_query($conn, $query);
-  if(mysqli_num_rows($result) > 0){
-    echo "<p class='feedback red'>book with this isbn already exists!</p>";
+  if(!mysqli_num_rows($result) > 0){
+    echo "<p class='feedback red'>book with this isbn does not exist!</p>";
   }
   else{
     $title = $_POST['title'];
@@ -98,10 +41,6 @@ if(isset($_POST['submit_up_book'])){
         break;
       }
     }
-    if(!validateISBN($fisbn)){
-      $errorflag = 1;
-      echo "<p class='feedback red'>Error: invalid ISBN.</p>";
-    }
     $fileContent = file_get_contents($_FILES['file']['tmp_name']);
     $base64Data = base64_encode($fileContent);
     $imgurlfull = "b'".$base64Data."'";
@@ -111,6 +50,15 @@ if(isset($_POST['submit_up_book'])){
     }
     if(!$errorflag){
 
+      #remove previous book, author and category
+      $query = 'delete from book where isbn = '.$fisbn;
+      if(!mysqli_query($conn, $query)){echo "<p class='feedback red'>FAILED: 1.</p>";}
+      $query = 'delete from author where isbn = '.$fisbn;
+      if(!mysqli_query($conn, $query)){echo "<p class='feedback red'>FAILED: 2.</p>";}
+      $query = 'delete from category where isbn = '.$fisbn;
+      if(!mysqli_query($conn, $query)){echo "<p class='feedback red'>FAILED: 3.</p>";}
+
+      #add new
       $query = 'insert into book (title, publisher, isbn,	pages, summary, cover_image, language,	keywords) values ("'.$title.'", "'.$pub.'", "'.$fisbn.'", "'.$pages.'", "'.$sum.'", "'.$imgurlfull.'", "'.$lang.'", "'.$key.'")';
       #echo $query;
 
@@ -209,7 +157,7 @@ if(isset($_POST['submit_up_book'])){
   </div>
   <br class="half-br">
   <br class="half-br">
-  <button class="button" name="submit_up_book" type="submit">
+  <button class="button" name="submit_update_book" type="submit">
       <span class="button_lg">
         <span class="button_sl"></span>
         <span class="button_text">submit</span>

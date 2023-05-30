@@ -61,6 +61,8 @@
   $query = "select handler_verified, handler_request from teacher where username = '".$username."'";
   $result = mysqli_query($conn, $query);
   $tr=mysqli_fetch_row($result);
+  $is_req_handler = 0;
+  $is_teacher = 0;
   if(mysqli_num_rows($result) > 0 && $tr[0]!=""){
     $is_teacher = 1;
     if($tr[0] == 1){
@@ -70,6 +72,7 @@
     else{
       $is_verified_handler = 0;
       if($tr[1] == 1){
+        $is_req_handler = 1;
         echo "<script>document.getElementById('tag-req-handler').style.display='inline-block';</script>";
       }
     }
@@ -105,71 +108,94 @@
 
   ?>
 	<div class="area-left">
+    <p>USER</p>
 		<button id="selected-left"class="btn-simple-blue"onclick="selectThisBtn(this,1);"><?php if($is_my_profile) echo "My Account"; else echo $page_username; ?></button>
 
     <?php
-    if($is_valid_handler || $is_admin || $is_my_profile) {
+    if($is_valid_handler || $is_my_profile) {
       echo '<button class="btn-simple-blue"onclick="selectThisBtn(this,2);">Loans</button>
       <button class="btn-simple-blue"onclick="selectThisBtn(this,3);">Reservations</button>
       <button class="btn-simple-blue"onclick="selectThisBtn(this,4);">Reviews</button>';
     }
-    if($is_my_profile && ($is_verified_handler || $is_admin)) {
+    if($is_my_profile && $is_teacher && !$is_verified_handler) {
+      echo '<button class="btn-simple-blue"onclick="selectThisBtn(this,15);">Become Handler</button>';
+    }
+    if($is_my_profile && $is_verified_handler) {
       echo '<p>HANDLER</p>
       <button class="btn-simple-blue"onclick="selectThisBtn(this,5);">Registration Requests</button>
       <button class="btn-simple-blue"onclick="selectThisBtn(this,6);">Loan Requests</button>
-  		<button class="btn-simple-blue"onclick="selectThisBtn(this,7);">Reservation Requests</button>
   		<button class="btn-simple-blue"onclick="selectThisBtn(this,8);">Review Requests</button>
-  		<button class="btn-simple-blue"onclick="selectThisBtn(this,9);">Add New Book</button>
-  		<button class="btn-simple-blue"onclick="selectThisBtn(this,10);">Find Users</button>
-  		<button class="btn-simple-blue"onclick="selectThisBtn(this,11);">Stats</button>';
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,9);">Add New Book</button>
+  		<button class="btn-simple-blue"onclick="selectThisBtn(this,26);">Edit a Book</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,10);">Find Users</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,16);">Avg Ratings Per User</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,17);">Avg Ratings Per Category</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,18);">Late Returns</button>';
     }
     if($is_my_profile && $is_admin) {
       echo '<p>ADMIN</p>
   		<button class="btn-simple-blue"onclick="selectThisBtn(this,12);">Backup / Restore</button>
       <button class="btn-simple-blue"onclick="selectThisBtn(this,13);">Handler Requests</button>
-  		<button class="btn-simple-blue"onclick="selectThisBtn(this,14);">Stats</button>';
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,25);">New School</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,14);">3.1.1</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,19);">3.1.2</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,20);">3.1.3</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,21);">3.1.4</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,22);">3.1.5</button>
+      <button class="btn-simple-blue"onclick="selectThisBtn(this,23);">3.1.6</button>
+  		<button class="btn-simple-blue"onclick="selectThisBtn(this,24);">3.1.7</button>';
     }
     ?>
   </div>
+
+
 	<div class="content-right">
     <?php
     echo '<div id="page1"class="userpage">'; include 'user_pages/account.php'; echo "</div>";
-    if($is_valid_handler || $is_admin || $is_my_profile) {
+    if($is_valid_handler || $is_my_profile) {
       echo '<div id="page2"class="userpage">'; include 'user_pages/loans.php'; echo "</div>";
       echo '<div id="page3"class="userpage">'; include 'user_pages/reservations.php'; echo "</div>";
       echo '<div id="page4"class="userpage">'; include 'user_pages/reviews.php'; echo "</div>";
     }
-    if($is_my_profile && ($is_verified_handler || $is_admin)) {
+    if($is_my_profile && $is_teacher && !$is_verified_handler) {
+      echo '<div id="page15"class="userpage">'; include 'user_pages/reqtohandler.php'; echo "</div>";
+    }
+    if($is_my_profile && $is_verified_handler) {
       echo '<div id="page5"class="userpage">'; include 'user_pages/regreq.php'; echo "</div>";
       echo '<div id="page6"class="userpage">'; include 'user_pages/loanreq.php'; echo "</div>";
-      echo '<div id="page7"class="userpage">'; include 'user_pages/rsvreq.php'; echo "</div>";
       echo '<div id="page8"class="userpage">'; include 'user_pages/reviewreq.php'; echo "</div>";
       echo '<div id="page9"class="userpage">'; include 'user_pages/newbook.php'; echo "</div>";
+      echo '<div id="page26"class="userpage">'; include 'user_pages/editbook.php'; echo "</div>";
       echo '<div id="page10"class="userpage">'; include 'user_pages/findusers.php'; echo "</div>";
-      echo '<div id="page11"class="userpage">'; include 'user_pages/handlerstats.php'; echo "</div>";
+      echo '<div id="page16"class="userpage">'; include 'user_pages/avgperuser.php'; echo "</div>";
+      echo '<div id="page17"class="userpage">'; include 'user_pages/avgpercategory.php'; echo "</div>";
+      echo '<div id="page18"class="userpage">'; include 'user_pages/latereturns.php'; echo "</div>";
     }
-    if($is_my_profile || $is_admin) {
+    if($is_my_profile && $is_admin) {
       echo '<div id="page12"class="userpage">'; include 'user_pages/backuprestore.php'; echo "</div>";
       echo '<div id="page13"class="userpage">'; include 'user_pages/handlerreq.php'; echo "</div>";
-      echo '<div id="page14"class="userpage">'; include 'user_pages/adminstats.php'; echo "</div>";
+      echo '<div id="page25"class="userpage">'; include 'user_pages/newschool.php'; echo "</div>";
+      echo '<div id="page14"class="userpage">'; include 'user_pages/admin1.php'; echo "</div>";
+      echo '<div id="page19"class="userpage">'; include 'user_pages/admin2.php'; echo "</div>";
+      echo '<div id="page20"class="userpage">'; include 'user_pages/admin3.php'; echo "</div>";
+      echo '<div id="page21"class="userpage">'; include 'user_pages/admin4.php'; echo "</div>";
+      echo '<div id="page22"class="userpage">'; include 'user_pages/admin5.php'; echo "</div>";
+      echo '<div id="page23"class="userpage">'; include 'user_pages/admin6.php'; echo "</div>";
+      echo '<div id="page24"class="userpage">'; include 'user_pages/admin7.php'; echo "</div>";
     }
     ?>
 	</div>
 </main>
-
-
 <script type="text/javascript">
-	function selectThisBtn(d,pageindex){
-		if(document.getElementById('selected-left')) document.getElementById('selected-left').id="";
-		d.id="selected-left";
-		for(const i of document.getElementsByClassName('userpage')) i.style.display = 'none';
-		document.getElementById('page'+(pageindex).toString()).style.display = 'block';
-	}
+  function selectThisBtn(d,pageindex){
+    if(document.getElementById('selected-left')) document.getElementById('selected-left').id="";
+    d.id="selected-left";
+    if(document.getElementsByClassName('userpage')) for(const i of document.getElementsByClassName('userpage')) i.style.display = 'none';
+    if(document.getElementById('page'+(pageindex).toString()))document.getElementById('page'+(pageindex).toString()).style.display = 'block';
+  }
 </script>
-<script>
-  const btns = document.getElementsByTagName('main')[0].getElementsByClassName('area-left')[0].getElementsByTagName('button');
-  btns[3].click();
-</script>
+
+
 
 
 </body></html>

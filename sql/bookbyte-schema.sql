@@ -98,7 +98,7 @@ create table if not exists school_storage (
 create table if not exists ratings (
 	username varchar(20) not null,
 	isbn char(10) not null,
-	date timestamp not null default current_timestamp on update current_timestamp,
+	date timestamp not null default current_timestamp,
 	stars smallint not null,
 	description text,
 	rating_verified boolean default 0,

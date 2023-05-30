@@ -67,6 +67,11 @@ exeute in mysql console:
     Save the changes to php.ini and restart your web server for the changes to take effect.
     
 `sudo nano /etc/php/8.1/cli/php.ini`
+in php.ini:
+	make sure file_uploads = On
+	upload_max_filesize > sql file used for restoring db
+	post_max_size > sql file used for restoring db
+
 
 
 

@@ -37,27 +37,50 @@ function generateUserRating($username, $rating, $description, $date) {
   return $output;
 }
 
-function generateSchoolAvail($sch_name, $sch_city, $free_copies, $rem_loans, $rem_rsv, $sch_id) {
-  $output = '<form class="user-rating"action=""method="post"><div class="row1"><label class="username">' . $sch_name .' of ' . $sch_city . '</label><label class="date">free copies: ' . $free_copies . '</label>';
+function generateSchoolAvail($sch_name, $sch_city, $free_copies, $queue, $rem_loans_or_rsv, $sch_id) {
+  $output = '<form class="user-rating"action=""method="post"><div class="row1"><label class="username">' . $sch_name .' of ' . $sch_city . '</label><label class="date">free copies: ' . $free_copies . ' (queue: '.$queue.')</label>';
   $output .= '</div><div class="row2">';
   $output .= '<input type="text"style="display:none"value="'.$sch_id.'"name="sch-id"/>';
-  if($rem_loans > 0) $output .= '
-  <button class="button"type="submit"name="submit_borrow">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">BORROW</span>
-    </span>
-  </button>';
-
-  if($rem_rsv > 0) $output .= '<button class="button"type="submit"name="submit_reserve">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">RESERVE</span>
-    </span>
-  </button>';
-
+  if($free_copies > 0 && $rem_loans_or_rsv) {$output .= '
+    <button class="button"type="submit"name="submit_borrow">
+      <span class="button_lg">
+        <span class="button_sl"></span>
+        <span class="button_text">BORROW</span>
+      </span>
+    </button>';
+  }
+  else if($rem_loans_or_rsv){
+    $output .= '<button class="button"type="submit"name="submit_reserve">
+      <span class="button_lg">
+        <span class="button_sl"></span>
+        <span class="button_text">RESERVE</span>
+      </span>
+    </button>';
+  }
   $output .= '</div></form>';
   return $output;
 }
+
+function validateISBN($isbn){
+    $isbn = str_replace(['-', ' '], '', $isbn);
+    if (strlen($isbn) === 10) {
+        $checksum = 0;
+        for ($i = 0; $i < 9; $i++) {
+            if (!is_numeric($isbn[$i])) {
+                return false;
+            }
+            $checksum += (10 - $i) * $isbn[$i];
+        }
+
+        $lastDigit = strtoupper($isbn[9]);
+        if ($lastDigit !== 'X' && !is_numeric($lastDigit)) {
+            return false;
+        }
+        $checksum += ($lastDigit === 'X') ? 10 : intval($lastDigit);
+        return ($checksum % 11 === 0);
+    }
+    return false;
+}
+
 
 ?>
