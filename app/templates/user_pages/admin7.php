@@ -2,15 +2,18 @@
 <center>
 <?php
 
-$query = "SELECT a.name, COUNT(*) AS num_books
-FROM author AS a
-GROUP BY a.name
-HAVING num_books >= (
-  SELECT COUNT(*) - 5
-  FROM author
-  GROUP BY name
-  ORDER BY COUNT(*) DESC
-  LIMIT 1
+$query = "SELECT GROUP_CONCAT(handler_username), loaned
+FROM (
+	SELECT handler_username, COUNT(*) AS loaned
+	FROM loan
+	WHERE in_out = 'borrowed'
+		AND l.transaction_verified <> 0
+		AND l.date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+	GROUP BY handler_username
+	HAVING loaned > 20
+	) AS subquery
+GROUP BY loaned
+ORDER BY loaned DESC
 )";
 $result = mysqli_query($conn, $query);
 echo '<table class="custom-table"><tr><thead><tr><th>Name</th><th>Number of Books</th></tr></thead><tbody>';
