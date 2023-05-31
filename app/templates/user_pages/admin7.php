@@ -13,8 +13,7 @@ HAVING count(isbn) <= (
 		GROUP BY name
 	) AS book_count
 )
-ORDER BY count(isbn) DESC
-";
+ORDER BY count(isbn) DESC";
 $result = mysqli_query($conn, $query);
 echo '<table class="custom-table"><tr><thead><tr><th>Name</th><th>Number of Books</th></tr></thead><tbody>';
 while($tr = mysqli_fetch_row($result)){
