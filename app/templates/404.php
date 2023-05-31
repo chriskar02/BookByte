@@ -28,7 +28,7 @@ p{
 
 
 		<div>
-			<button onclick="window.location.replace('home.html')" class="button">
+			<button onclick="window.location.replace('home')" class="button">
 				<span class="button_lg">
 					<span class="button_sl"></span>
 					<span class="button_text">Go HOME</span>
