@@ -294,7 +294,7 @@ order by ss.copies desc
             <form action=""method="post">
 
               <div class="form__group field">
-                <input type="number" name="rating" class="form__field" value="<?php echo $myreview[2] ?>"placeholder="" required>
+                <input type="number" name="rating" class="form__field" value="<?php echo $myreview[2] ?>"placeholder="" max="5" min="0" required>
                 <label for="rating" class="form__label">Rate (1-5)</label>
               </div>
               <textarea name="description"placeholder="Write something..." required><?php echo $myreview[3] ?></textarea>

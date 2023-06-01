@@ -26,12 +26,12 @@
 
     <form action="" method="POST">
   <div class="form__group field">
-    <input type="input" name="username" class="form__field" placeholder="Name" required>
+    <input type="input" name="username" class="form__field" placeholder="Name" maxlength="20" required>
     <label for="username" class="form__label">USERNAME</label>
   </div>
   <br class="half-br">
   <div class="form__group field">
-    <input type="password" name="password" class="form__field" placeholder="Name" required>
+    <input type="password" name="password" class="form__field" placeholder="Name" maxlength="40" required>
     <label for="password" class="form__label">PASSWORD</label>
   </div>
   <div class="input-div">

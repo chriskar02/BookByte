@@ -2,12 +2,9 @@
 2. Να φτιαχτει το restore from file (δεν ανεβαινει το αρχειο)
 3. Διορθωση er.dia, schema.dia (έχουν γίνει αλλαγές στα domains και τα attributes του bookbyte-schema.sql)
 4. DDL (create, drop, alter): να φτιαχτει drop.sql
-5. DML (insert, update, delete, select)
-6. add checks στα create tables
 7. create indexes
 8. user manual
 9. αναφορα
-10. triggers: πχ όταν επιστρέφεται ένα βιβλιο, αν υπάρχει κράτηση εκείνη να μετατρέπεται σε αίτηση δανεισμού.
 
 
 

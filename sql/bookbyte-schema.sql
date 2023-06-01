@@ -13,14 +13,15 @@ CREATE SCHEMA BookByte;
 USE BookByte;
 
 create table if not exists school (
-	id int primary key auto_increment,
+	id int unsigned primary key auto_increment,
 	name varchar(60) not null,
 	email varchar(60) not null unique,
 	address varchar(60) not null unique,
 	city varchar(30) not null,
 	principal_name varchar(50) not null,
-	phone int not null unique,
-	unique(name, city)
+	phone int unsigned not null unique,
+	unique(name, city),
+	check ( phone between 999999999 and 10000000000 )
 ) engine=InnoDB default charset=utf8;
 
 create table if not exists user (
@@ -28,7 +29,7 @@ create table if not exists user (
 	password varchar(40) not null,
 	email varchar(60) not null unique,
 	name varchar(50) not null,
-	sch_id int not null,
+	sch_id int unsigned not null,
 	user_verified boolean default False,
 	constraint fk_user_sch_id foreign key (sch_id)
 	 references school(id) on delete cascade on update cascade
@@ -61,7 +62,7 @@ create table if not exists book (
 	title varchar(80) not null,
 	publisher varchar(40) not null,
 	isbn char(10) primary key,
-	pages smallint,
+	pages smallint unsigned,
 	summary text not null,
 	cover_image blob,
 	language varchar(15) not null,
@@ -85,9 +86,9 @@ create table if not exists category (
 ) engine=InnoDB default charset=utf8;
 
 create table if not exists school_storage (
-	sch_id int not null,
+	sch_id int unsigned not null,
 	isbn char(10) not null,
-	copies int not null,
+	copies int unsigned not null,
 	primary key (isbn, sch_id),
 	constraint fk_storage_sch_id foreign key (sch_id)
 	 references school(id) on delete cascade on update cascade,
@@ -99,10 +100,11 @@ create table if not exists ratings (
 	username varchar(20) not null,
 	isbn char(10) not null,
 	date timestamp not null default current_timestamp,
-	stars smallint not null,
+	stars smallint unsigned not null,
 	description text,
 	rating_verified boolean default 0,
 	primary key (username, isbn),
+	check ( stars between 0 and 5 ),
 	constraint fk_ratings_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
 	constraint fk_ratings_book foreign key (isbn)
@@ -114,7 +116,7 @@ create table if not exists loan (
 	isbn char(10) not null,
 	handler_username varchar(20) default null,
 	date timestamp not null default current_timestamp,
-	sch_id int not null,
+	sch_id int unsigned not null,
 	in_out enum('borrowed','returned') not null,
 	transaction_verified int default 0, /*0: not berified borrow, 1: verified borrow, 2: (verified) return*/
 	primary key (username, isbn, date, in_out),
@@ -130,7 +132,7 @@ create table if not exists reservation (
 	username varchar(20) not null,
 	isbn char(10) not null,
 	date timestamp not null default current_timestamp,
-	sch_id int not null,
+	sch_id int unsigned not null,
 	primary key (username, isbn),
 	constraint fk_rsv_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
