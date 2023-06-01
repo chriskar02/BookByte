@@ -42,7 +42,7 @@ function getReviewResults($divID, $conn, $is_admin, $is_valid_handler, $is_my_pr
     $output .= '<td>' . $tr[0] . '</td>';
     $output .= '<td>' . $tr[2] . '</td>';
     $output .= '<td>' . $tr[3] . '</td><td>';
-    if(($is_valid_handler || $is_admin)){
+    if(($is_valid_handler)){
       if($tr[3] != 1){
         $output .= '<form action=""method="post">
           <button class="button" name="submit_rating_verify" type="submit">

@@ -72,7 +72,7 @@ while($tr = mysqli_fetch_row($result)){
   $output .= '<td>' . $tr[2] . ' of ' . $tr[3] . '</td>';
   $output .= '<td>' . $tr[4] . '</td>';
   if($tr[5] == 0 && $tr[4] == 'borrowed'){
-    if($is_valid_handler || $is_admin){
+    if($is_valid_handler){
       $output .= '<td><form action=""method="post">
         <button class="button" name="submit_verify" type="submit">
           <span class="button_lg">
@@ -104,7 +104,7 @@ while($tr = mysqli_fetch_row($result)){
     }
   }
   else if($tr[5] == 1 && $tr[4] == 'borrowed'){
-    if($is_valid_handler || $is_admin){
+    if($is_valid_handler){
       $output .= '<td><form action=""method="post">
         <button class="button" name="submit_return" type="submit">
           <span class="button_lg">

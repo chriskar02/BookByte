@@ -7,7 +7,7 @@ if(isset($_POST['submit_borrow_from_rsv'])){
   $form_schid = $_POST['sch-id'];
   $form_handla = $username;
 
-  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$page_username."', '".$form_isbn."', '".$form_handla."', '".$form_schid."', 'borrowed', '1')";
+  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$page_username."', '".$form_isbn."', '".$form_handla."', '".$form_schid."', 'borrowed', '0')";
   $result = mysqli_query($conn, $query);
   if($result){
     echo "<label class='feedback green'>submitted loan!</label>";
@@ -79,7 +79,7 @@ while($tr = mysqli_fetch_row($result)){
       <button class="button" name="submit_borrow_from_rsv" type="submit">
         <span class="button_lg">
           <span class="button_sl"></span>
-          <span class="button_text">borrow (and verify)</span>
+          <span class="button_text">request borrow</span>
         </span>
       </button>
       <input type="text" value="'.$tr[4].'" name="isbn" style="display:none;"/>
