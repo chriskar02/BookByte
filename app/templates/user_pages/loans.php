@@ -40,22 +40,11 @@ if(isset($_POST['submit_return'])){
   $form_handler = $username;
   $form_borrower = $page_username;
 
-  $query = "update loan set transaction_verified = 2 where username = '".$form_borrower."' and isbn = '".$form_isbn."' and loan.date = '".$form_date."'";
+  $query = "call return_book('".$form_borrower."', '".$form_isbn."', '".$form_handler."', '".$form_schid."', '".$form_date."');";
+  #echo $query;
   $result = mysqli_query($conn, $query);
   if($result){
-    echo "<label class='feedback green'>successfully upadted last transaction.</label>";
-  }
-  else{
-    echo "<label class='feedback red'>[database error] failed, try again.</label>";
-  }
-
-  $query = "insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified) values ('".$form_borrower."', '".$form_isbn."', '".$form_handler."', '".$form_schid."', 'returned', '1')";
-  $result = mysqli_query($conn, $query);
-  if($result){
-    echo "<label class='feedback green'>successfully returned!</label>";
-
-    echo "<script>window.location.href += '';</script>";
-
+    echo "<label class='feedback green'>successfully returned.</label>";
   }
   else{
     echo "<label class='feedback red'>[database error] failed, try again.</label>";

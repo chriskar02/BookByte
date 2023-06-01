@@ -149,12 +149,40 @@ create view verified_handler as
 	select username, birth from teacher where handler_verified = 1;
 
 
+delimiter //
+
+-- when a book is returned, check if there are reservations for it
+create procedure return_book(
+    in p_username varchar(20),
+    in p_isbn char(10),
+    in p_handler_username varchar(20),
+    in p_sch_id int,
+    in p_date timestamp
+)
+begin
+	-- complete borrow transaction
+	update loan set transaction_verified = 2 where username = p_username and isbn = p_isbn and loan.date = p_date;
+	
+	-- add return transaction
+    insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified)
+    values (p_username, p_isbn, p_handler_username, p_sch_id, 'returned', 2);
+
+    -- add new borrow request in case there is an active reservation
+	insert into loan (username, isbn, handler_username, sch_id, in_out, transaction_verified)
+    select username, isbn, NULL, sch_id, 'borrowed', 0
+    from reservation
+    where isbn = p_isbn and sch_id = p_sch_id
+    limit 1;
+
+	-- remove reservation
+    delete from reservation where username = (select username from reservation where isbn = p_isbn and sch_id = p_sch_id limit 1 ) and isbn = p_isbn;
+
+end//
+
+delimiter ;
 
 
-
-
-
-
+ 
 
 
 
