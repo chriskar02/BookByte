@@ -7,6 +7,7 @@ delete from author;
 delete from book;
 delete from admin;
 delete from teacher;
+delete from session_tokens;
 delete from user;
 delete from school;
 

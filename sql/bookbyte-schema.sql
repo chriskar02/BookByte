@@ -183,9 +183,8 @@ end//
 
 delimiter ;
 
-
- 
-
+create index USERNAMES on user(username);
+create index ISBNS on book(isbn);
 
 
 

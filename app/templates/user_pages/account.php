@@ -44,20 +44,24 @@
 
     }
     ?>
-
-
-    <button class="save-btn icon-btn"name="submit-new-details"type="submit"></button>
-    <label id="editbtn"class="edit-btn icon-btn"onclick="editDetails()"></label>
+<?php
+    if($is_valid_handler || $is_my_profile){
+      echo '<label id="editbtn"class="edit-btn icon-btn"onclick="editDetails()"></label>';
+    }
+?>
+    <button class="save-btn icon-btn" id="savebtn" style="display:none;" name="submit-new-details"type="submit"></button>
     <label id="cancelbtn"class="cancel-btn icon-btn"style="display:none;"onclick="cancelEdit()"></label>
     <script>
       function cancelEdit(){
         document.getElementById('cancelbtn').style.display='none';
+        document.getElementById('savebtn').style.display='none';
         document.getElementById('editbtn').style.display='inline-block';
         for(const i of document.getElementsByClassName('details-right-input')) i.style.display='none';
         for(const i of document.getElementsByClassName('details-right-label')) i.style.display='inline-block';
       }
       function editDetails(){
         document.getElementById('cancelbtn').style.display='inline-block';
+        document.getElementById('savebtn').style.display='inline-block';
         document.getElementById('editbtn').style.display='none';
         for(const i of document.getElementsByClassName('details-right-label')) i.style.display='none';
         for(const i of document.getElementsByClassName('details-right-input')) i.style.display='inline-block';
