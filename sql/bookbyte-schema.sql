@@ -118,7 +118,7 @@ create table if not exists loan (
 	date timestamp not null default current_timestamp,
 	sch_id int unsigned not null,
 	in_out enum('borrowed','returned') not null,
-	transaction_verified int default 0, /*0: not berified borrow, 1: verified borrow, 2: (verified) return*/
+	transaction_verified smallint default 0, /*0: not berified borrow, 1: verified borrow, 2: (verified) return*/
 	primary key (username, isbn, date, in_out),
 	constraint fk_loans_username foreign key (username)
 	 references user(username) on delete cascade on update cascade,
