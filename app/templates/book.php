@@ -101,7 +101,7 @@
         <div class="authors"><?php echo $authors; ?></div>
         <div class="category"><?php echo $category; ?></div>
         <div class="rating"style="--rating:<?php echo $rating*20; ?>"></div>
-        <div class="publisher tinydetails">pub: <?php echo $publisher; ?></div>
+        <div class="publisher tinydetails">publisher: <?php echo $publisher; ?></div>
         <div class="pages tinydetails"><?php echo $pages; ?> pages</div>
         <div class="isbn tinydetails">ISBN: <?php echo $isbn; ?></div>
         <div class="language tinydetails">language: <?php echo $language; ?></div>
