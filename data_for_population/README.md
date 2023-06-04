@@ -1,1 +1,0 @@
-The directory "generators" contains pythons scripts that generate data in csv format, and the directory "generated_csv" contains the results. The file csv_to_sql_insert_data_format.py converts the data in generated_csv from csv to sql format to be used by the database. The output of this script is bookbyte-insert-data.sql, which shall be moved in the "../sql" directory.
